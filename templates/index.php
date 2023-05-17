@@ -10,5 +10,11 @@
 </head>
 <body>
   <h1>Hola Mundo</h1>
+  <button
+  x-data="test"
+  @click="clicked"
+  class="btn btn-outline-primary">
+    Test Alpine
+  </button>
 </body>
 </html>
