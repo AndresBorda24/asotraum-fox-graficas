@@ -34,6 +34,7 @@ $app->get("/", function(Response $response, PhpRenderer $views): Response {
 
 $app->group("/api/ventas", function(RouteCollectorProxy $group) {
     $group->get("/test", [VentasController::class, "test"]);
+    $group->get("/anuladas", [VentasController::class, "anuladas"]);
 });
 
 $app->run();

@@ -5,7 +5,7 @@ namespace App;
 
 use Psr\Http\Message\ResponseInterface as Response;
 
-if (! function_exists('App\responseJSON')) {
+if (! function_exists('App\responseJson')) {
     /**
      * Da formato a la respuesta para devolverla como JSON
     */
@@ -19,5 +19,17 @@ if (! function_exists('App\responseJSON')) {
         return $response
             ->withHeader("Content-Type", "application/json")
             ->withStatus($statusCode);
+    }
+}
+
+if (! function_exists('App\trimUtf8')) {
+    /**
+     * Convierte el texto en utf8 y quita los espacios en blanco
+    */
+    function trimUtf8(string $str): string
+    {
+        return trim(
+            mb_convert_encoding($str, 'UTF-8')
+        );
     }
 }

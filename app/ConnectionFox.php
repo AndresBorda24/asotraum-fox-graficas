@@ -25,7 +25,7 @@ class ConnectionFox extends PDO
             $this->user,
             $this->pass,
             [
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ
             ]
         );
     }
