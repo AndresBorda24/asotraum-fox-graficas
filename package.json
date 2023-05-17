@@ -1,0 +1,10 @@
+{
+  "name": "graficas-fact",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@symfony/webpack-encore": "^4.3.0"
+  }
+}
