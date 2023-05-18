@@ -1,12 +1,15 @@
 <?php
 declare(strict_types=1);
 
+use App\Config;
 use App\ConnectionFox;
 use Slim\Views\PhpRenderer;
 
 return [
-    PhpRenderer::class => fn() => new PhpRenderer(
-        __DIR__ . "/../templates"
+    Config::class        => fn() => new Config(
+        require __DIR__ . "/configs.php"
     ),
-    ConnectionFox::class => fn() => new ConnectionFox("w:\\"),
+    ConnectionFox::class => fn(Config $c) => new ConnectionFox(
+        $c->get("db.source")
+    ),
 ];
