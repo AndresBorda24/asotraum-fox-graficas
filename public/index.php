@@ -1,14 +1,17 @@
 <?php
 declare(strict_types=1);
 
-use App\Controllers\Api\VentasController;
+use App\Views;
 use DI\Container;
-use Slim\Views\PhpRenderer;
 use \DI\Bridge\Slim\Bridge;
 use Slim\Routing\RouteCollectorProxy;
+use App\Controllers\Api\VentasController;
 use Psr\Http\Message\ResponseInterface as Response;
 
 require __DIR__ . "/../vendor/autoload.php";
+
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ ."/..");
+$dotenv->load();
 
 /**
 * Creacion del contenedor
@@ -28,7 +31,7 @@ $errorMiddleware = $app->addErrorMiddleware(true, false, false);
 /**
  * Rutas de la app
 */
-$app->get("/", function(Response $response, PhpRenderer $views): Response {
+$app->get("/", function(Response $response, Views $views): Response {
     return $views->render($response, "index.php");
 });
 
