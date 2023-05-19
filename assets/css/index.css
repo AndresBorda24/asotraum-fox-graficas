@@ -3,3 +3,6 @@
 body {
     font-family: 'Source Sans Pro', sans-serif;
 }
+.flex {
+    display: flex;
+}
