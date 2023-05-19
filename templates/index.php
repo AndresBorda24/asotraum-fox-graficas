@@ -11,7 +11,10 @@
   crossorigin="anonymous">
   <?= $this->loadAssets('index') ?>
 </head>
-<body>
+<body class="bg-body-tertiary">
   <?= $this->fetch("./partials/header.php") ?>
+
+  <!-- Graficas -->
+  <?= $this->fetch("./factu/grafica-1.php") ?>
 </body>
 </html>

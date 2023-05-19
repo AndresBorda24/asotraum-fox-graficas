@@ -1,5 +1,4 @@
-<header
-class="p-2 shadow bg-body">
+<header class="p-2 mb-4 shadow bg-body">
 <div class="container d-flex border-bottom align-items-center mb-2">
   <img
   class="m-2" src="/img/logo_aso.png"
