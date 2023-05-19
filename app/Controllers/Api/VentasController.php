@@ -5,6 +5,7 @@ namespace App\Controllers\Api;
 
 use App\ConnectionFox;
 use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 
 use function App\trimUtf8;
 use function App\responseJson;
@@ -19,8 +20,22 @@ class VentasController
         private ConnectionFox $conn
     ){}
 
-    public function facturado(Response $response): Response
+    public function facturado(Request $request, Response $response): Response
     {
+        /**
+         * Obtenemos las fechas de los parametros de la url
+        */
+        $query = $request->getQueryParams();
+
+        $start = array_key_exists("start", $query)
+            ? date("m.d.y", strtotime($query["start"]))
+            : date("m.d.y", strtotime('first day of last month'));
+
+        $end = array_key_exists("end", $query)
+            ? date("m.d.y", strtotime($query["end"]))
+            : date("m.d.y", strtotime('last day of last month'));
+
+        /* Se realiza la consulta */
         $data = $this->conn->query("
             SELECT
                 tercero,
@@ -32,16 +47,25 @@ class VentasController
                 SUM(iva_bienes) AS iva
             FROM GEMA10.D/VENTAS/DATOS/VTFACC23
             WHERE
-                BETWEEN(fecha, CTOD('04.01.23'), CTOD('04.30.23'))
+                BETWEEN(fecha, CTOD('$start'), CTOD('$end'))
                 AND ! LIKE('<< ANULADA >>*', observac)
             ORDER BY exento DESC
             GROUP BY tercero
         ");
 
+        /**
+         * A partir de aqui le damos el formato que queremos a la informacion
+        */
         $formatted = [
             "total_facturado" => [],
             "total_facturas"  => [],
-            "categories"      => []
+            "categories"      => [],
+            "meta"            => [
+                "dates" => [
+                    "start" => $start,
+                    "end"   => $end
+                ]
+            ]
         ];
 
         while($reg = $data->fetch()) {

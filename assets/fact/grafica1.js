@@ -1,5 +1,6 @@
 import axios from 'axios';
-import ApexCharts from 'apexcharts'
+import ApexCharts from 'apexcharts';
+import { showLoader, hideLoader } from "../partials/loader";
 
 export default () => ({
     data: {},
@@ -7,33 +8,42 @@ export default () => ({
     formatter: new Intl.NumberFormat('es-CO', {
         style: 'currency', currency: 'COP'
     }),
+    events: {
+        ['@new-dates-range']: "updateChart($event.detail)"
+    },
     async init() {
         /**
          * Creamos la grafia `vacia`, sin datos (seires)
         */
         this.createChart();
         this.chart.render();
-
-        /**
-         * Consultamos la base de datos
-        */
-        await this.getData();
-        this.updateChartSeries();
     },
     /**
      * Realiza la consulta a la API e iguala la variable `data` de la clase al
      * resultado.
     */
-    async getData() {
+    async getData(start, end) {
         try {
+            showLoader();
+            const API = "https://graficas-fact.local/api";
             const { data } = await axios.get(
-                "https://graficas-fact.local/api/ventas/facturado" // Refactorizar
-            );
+                `${API}/ventas/facturado?start=${start}&end=${end}` // Refactorizar
+            ).finally( () => hideLoader());
             this.data = data;
         } catch (e) {
             alert("Ha ocurrido un error.");
             console.error(e);
         }
+    },
+    /**
+     * Handler del evento de actualizacion de fechas
+    */
+    async updateChart({ start, end }) {
+        /**
+         * Consultamos la base de datos
+        */
+        await this.getData(start, end);
+        this.updateChartSeries();
     },
     /**
      * Actualiza las series y las categorias del grafico
@@ -63,7 +73,7 @@ export default () => ({
                 height: '520px'
             },
             noData: {
-                text: "Cargando info..."
+                text: "No info..."
             },
             series: [],
             legend: { position: "top" },
