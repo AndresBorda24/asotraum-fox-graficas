@@ -1,15 +1,15 @@
 <div
-x-data="grafica1"
+x-data="resumenFacturado"
 x-bind="events"
 class="p-3 p-md-4 p-lg-5 py-lg-3 shadow bg-body text-muted mb-4">
   <div class="d-flex flex-wrap align-items-center justify-content-between border-bottom p-2 mb-2 gap-2">
-    <h4 class="m-0"> Gr&aacute;fica Resumen Facturaci&oacute;n </h4>
+    <h4 class="m-0">Gr&aacute;fica Resumen Facturaci&oacute;n </h4>
     <?= $this->fetch('./partials/select-dates.php') ?>
   </div>
 
   <div class="d-flex gap-2">
     <!-- Contenedor de la grafica -->
-    <div class="flex-grow-1"id="grafica-1"></div>
+    <div class="flex-grow-1" id="resumen-facturado"></div>
 
     <!-- Tabla resumen -->
     <div class="small">

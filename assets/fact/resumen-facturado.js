@@ -5,6 +5,7 @@ import { showLoader, hideLoader } from "../partials/loader";
 export default () => ({
     data: {},
     chart: undefined,
+    chartWrapper: "resumen-facturado",
     formatter: new Intl.NumberFormat('es-CO', {
         style: 'currency', currency: 'COP'
     }),
@@ -104,7 +105,7 @@ export default () => ({
         }
 
         this.chart = new ApexCharts(
-            document.querySelector("#grafica-1"),
+            document.getElementById(this.chartWrapper),
             options
         );
     },
