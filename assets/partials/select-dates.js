@@ -1,6 +1,9 @@
 export default () => ({
     dateStart: undefined,
     dateEnd: undefined,
+    events: {
+        ["@update-selects-dates"]: "updateDates($event.detail)"
+    },
     init() {
         const [x, y] = this.getDates();
 
@@ -47,5 +50,29 @@ export default () => ({
             start: this.dateStart,
             end: this.dateEnd
         });
+    },
+    /**
+     * Actualiza las fechas de los selects a partir del evento
+     * `update-selects-dates`
+    */
+    updateDates({ start, end }) {
+        this.dateEnd   = this.getStringDate( new Date(end) );
+        this.dateStart = this.getStringDate( new Date(start) );
+        this.sendEvent();
+    },
+    getText() {
+        const end   = new Date(this.dateEnd);
+        const start = new Date(this.dateStart);
+        const options = {
+            weekday: 'long',
+            // year: 'numeric',
+            timeZone: 'UTC',
+            month: 'long',
+            day: 'numeric'
+        };
+        return "Desde el " +
+            start.toLocaleString('es-Co', options)  +
+            " hasta el " +
+            end.toLocaleString('es-Co', options);
     }
 });
