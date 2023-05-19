@@ -15,6 +15,7 @@
   <?= $this->fetch("./partials/header.php") ?>
 
   <!-- Graficas -->
+  <?= $this->fetch("./factu/facturacion-general.php") ?>
   <?= $this->fetch("./factu/resumen-facturado.php") ?>
   <?= $this->fetch("./partials/loader.php") ?>
 </body>
