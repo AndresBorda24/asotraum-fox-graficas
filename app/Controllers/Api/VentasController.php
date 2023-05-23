@@ -5,8 +5,8 @@ namespace App\Controllers\Api;
 
 use App\ConnectionFox;
 use Psr\Http\Message\ResponseInterface as Response;
+use App\Services\VentasFormatterService as VtFormatter;
 use Psr\Http\Message\ServerRequestInterface as Request;
-
 use function App\trimUtf8;
 use function App\responseJson;
 
@@ -22,18 +22,13 @@ class VentasController
 
     public function facturado(Request $request, Response $response): Response
     {
-        /**
-         * Obtenemos las fechas de los parametros de la url
-        */
-        $query = $request->getQueryParams();
+        // Fechas para consultas de fox (las toma del middleware)
+        $start = $request->getAttribute("start");
+        $end   = $request->getAttribute("end");
 
-        $start = array_key_exists("start", $query)
-            ? date("m.d.y", strtotime($query["start"]))
-            : date("m.d.y", strtotime('first day of last month'));
-
-        $end = array_key_exists("end", $query)
-            ? date("m.d.y", strtotime($query["end"]))
-            : date("m.d.y", strtotime('last day of last month'));
+        // Lo usamos para dar formato a la respuesta.
+        $fmt = new VtFormatter();
+        $fmt->setfacturadoSchema($start, $end);
 
         /* Se realiza la consulta */
         $data = $this->conn->query("
@@ -53,53 +48,74 @@ class VentasController
             GROUP BY tercero
         ");
 
-        /**
-         * A partir de aqui le damos el formato que queremos a la informacion
+        $fmt->facturado($data);
+
+        return responseJson($response, $fmt->getData());
+    }
+
+
+    public function resumenGeneral(Request $request, Response $response): Response
+    {
+        // Fechas para consultas de fox (las toma del middleware)
+        $start = $request->getAttribute("start");
+        $end   = $request->getAttribute("end");
+
+        // Lo usamos para dar formato a la respuesta.
+        $fmt = new VtFormatter();
+        $fmt->setResumenGeneralSchema($start, $end);
+
+        $query = "
+            SELECT tercero, nom_terce,
+                COUNT(tercero)  AS total_records, (
+                    SUM(vr_gravado) +
+                    SUM(vr_exento)  +
+                    SUM(iva_bienes)
+                ) - SUM(financ_vr) AS total
+            FROM GEMA10.D/VENTAS/DATOS/VTFACC23
+            WHERE %s
+            ORDER BY total DESC
+            GROUP BY tercero
+        ";
+
+        /** --------------------------------------------------------------------
+         *  Facturadas
+         * ---------------------------------------------------------------------
         */
-        $formatted = [
-            "total_facturado" => [],
-            "total_facturas"  => [],
-            "categories"      => [],
-            "meta"            => [
-                "dates" => [
-                    "start" => $start,
-                    "end"   => $end
-                ]
-            ]
-        ];
+        $faturado = $this->conn->query(sprintf($query, "
+            BETWEEN(fecha, CTOD('$start'), CTOD('$end'))
+            AND radicacion <= 0
+            AND ! LIKE('<< ANULADA >>*', observac)
+        "));
 
-        while($reg = $data->fetch()) {
-            if( count($formatted["total_facturado"]) >= 9 ) {
-                $formatted["categories"][9] = "otros";
+        $fmt->resumenGeneral($faturado, "facturado");
 
-                if(! isset($formatted["total_facturado"][9])) {
-                    $formatted["total_facturado"][9] = 0;
-                }
+        /** --------------------------------------------------------------------
+         *  Radicadas
+         * ---------------------------------------------------------------------
+        */
+        $radicado = $this->conn->query(sprintf($query, "
+            BETWEEN(fecha, CTOD('$start'), CTOD('$end'))
+            AND radicacion > 0
+            AND ! EMPTY(fech_rad)
+            AND ! LIKE('<< ANULADA >>*', observac)
+        "));
 
-                if(! isset($formatted["total_facturas"][9])) {
-                    $formatted["total_facturas"][9] = 0;
-                }
+        $fmt->resumenGeneral($radicado, "radicado");
 
-                $formatted["total_facturas"][9]  += (int) $reg->total;
-                $formatted["total_facturado"][9] += (
-                    (int) $reg->gravado +
-                    (int) $reg->exento +
-                    (int) $reg->iva
-                ) - (int) $reg->copago;
+        /** --------------------------------------------------------------------
+         *  Pendientes por radicar
+         * ---------------------------------------------------------------------
+        */
+        $pendiente = $this->conn->query(sprintf($query, "
+            BETWEEN(fecha, CTOD('$start'), CTOD('$end'))
+            AND radicacion > 0
+            AND EMPTY(fech_rad)
+            AND ! LIKE('<< ANULADA >>*', observac)
+        "));
 
-                continue;
-            }
+        $fmt->resumenGeneral($pendiente, "pendiente");
 
-            array_push($formatted["categories"], trimUtf8($reg->nom_terce));
-            array_push($formatted["total_facturas"], (int) $reg->total);
-            array_push($formatted["total_facturado"],  (
-                (int) $reg->gravado +
-                (int) $reg->exento +
-                (int) $reg->iva
-            ) - (int) $reg->copago);
-        }
-
-        return responseJson($response, $formatted);
+        return responseJson($response, $fmt->getData());
     }
 
     public function anuladas(Response $response): Response
