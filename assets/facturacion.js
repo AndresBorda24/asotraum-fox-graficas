@@ -14,4 +14,6 @@ document.addEventListener("alpine:init", () => {
     Alpine.data("facturacionGeneral", facturacionGeneral);
 });
 
-Alpine.start();
+document.addEventListener("DOMContentLoaded", () => {
+    Alpine.start();
+});
