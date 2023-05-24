@@ -7,13 +7,15 @@
     "watch": "encore dev --watch",
     "build": "encore production --progress"
   },
-  "devDependencies": {
-    "@symfony/webpack-encore": "^4.3.0"
-  },
   "dependencies": {
+    "@babel/core": "^7.21.8",
     "alpinejs": "^3.12.1",
     "apexcharts": "^3.40.0",
     "axios": "^1.4.0",
     "core-js": "^3.30.2"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.21.5",
+    "@symfony/webpack-encore": "^4.3.0"
   }
 }
