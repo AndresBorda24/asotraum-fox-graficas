@@ -90,20 +90,21 @@ class VentasFormatterService
             $totalRecords += $d->total_records;
 
             if (count($ctrl) >= 5) {
-                if (! array_key_exists("otros", $ctrl)) {
-                    $ctrl["otros"] = [
-                        "nombre"  => "",
+                if (count($ctrl) === 5) {
+                    $ctrl[5] = [
+                        "nombre"  => "otros",
                         "records" => 0,
                         "total"   => 0
                     ];
                 }
 
-                $ctrl["otros"]["records"] += (int) $d->total_records;
-                $ctrl["otros"]["total"]   += $d->total;
+                $ctrl[5]["records"] += (int) $d->total_records;
+                $ctrl[5]["total"]   += $d->total;
                 continue;
             }
 
-            $ctrl[$d->tercero] = [
+            $ctrl[] = [
+                "tercero" => $d->tercero,
                 "nombre"  => trimUtf8($d->nom_terce),
                 "records" => (int) $d->total_records,
                 "total"   => (int) $d->total
@@ -112,8 +113,8 @@ class VentasFormatterService
 
         $this->schema["meta"]["total"]["records"] += $totalRecords;
         $this->schema["meta"]["total"]["cash"]    += $totalCash;
-        $this->schema[$k]["data"] = $ctrl;
-        $this->schema[$k]["meta"] = [
+        $this->schema["data"][$k]["data"] = $ctrl;
+        $this->schema["data"][$k]["meta"] = [
             "records" => $totalRecords,
             "total"   => $totalCash
         ];
@@ -126,9 +127,11 @@ class VentasFormatterService
     public function setResumenGeneralSchema(string $start, string $end): void
     {
         $this->schema = [
-            "facturado" => [],
-            "radicado"  => [],
-            "pendiente" => [],
+            "data"      => [
+                "liberado" => [],
+                "radicado"  => [],
+                "pendiente" => []
+            ],
             "meta"      => [
                 "dates" => [
                     "start" => $start,

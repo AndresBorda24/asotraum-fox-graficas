@@ -6,12 +6,19 @@ export default () => ({
     data: {},
     chart: undefined,
     chartWrapper: "facturacion-general",
+    /**
+     * Esto nos ayuda a dar formato de moneda a algunos valores.
+    */
     formatter: new Intl.NumberFormat('es-CO', {
         style: 'currency', currency: 'COP'
     }),
     events: {
         ['@new-dates-range']: "updateChart($event.detail)"
     },
+    /**
+     * Aqui se guarda la informacion de la seccion al dar click
+    */
+    details: undefined,
     async init() {
         /**
          * Creamos la grafia `vacia`, sin datos (seires)
@@ -28,7 +35,7 @@ export default () => ({
             showLoader();
             const API = "https://graficas-fact.local/api";
             const { data } = await axios.get(
-                `${API}/ventas/facturado?start=${start}&end=${end}` // Refactorizar
+                `${API}/ventas/resumen-general?start=${start}&end=${end}` // Refactorizar
             ).finally( () => hideLoader());
             this.data = data;
         } catch (e) {
@@ -51,18 +58,19 @@ export default () => ({
     */
     updateChartSeries(){
         this.chart.updateOptions({
-            labels: this.data.categories
+            labels: Object.keys(this.data.data),
         });
 
-        this.chart.updateSeries([{
-            type: "column",
-            name: "Facturado por Entidad",
-            data: this.data.total_facturado
-        }, {
-            type: "line",
-            name: "Cantidad Total de Facturas",
-            data: this.data.total_facturas
-        }]);
+        this.chart.updateSeries(
+            Object.values(this.data.data).map(_ => _.meta.records),
+        );
+
+        if (typeof this.details !== 'undefined') {
+            this.setupDetails(
+                this.details.meta.index,
+                this.details.meta.color
+            );
+        }
     },
     /**
      * Crea la grafica pero `NO` la renderiza.
@@ -70,30 +78,38 @@ export default () => ({
     createChart() {
         const options = {
             chart: {
-                type: "line",
-                height: '520px'
+                type: "pie",
+                width: 600,
+                events: {
+                    legendClick: (context, seriesId, config) => {
+                        const color = config.globals.colors[ seriesId ];
+
+                        this.setupDetails(seriesId, color);
+                    }
+                }
             },
             noData: {
                 text: "No info..."
             },
             series: [],
-            legend: { position: "top" },
-            xaxis: {
-                type: 'categories',
-                labels: {
-                    hideOverlappingLabels: true,
-                    rotateAlways: true,
-                    minHeight: 120,
-                    trim: true,
-                    rotate: -45,
-                    style: { fontSize: '10px' }
-                },
-            }
+            legend: { position: "bottom" }
         }
 
         this.chart = new ApexCharts(
             document.getElementById(this.chartWrapper),
             options
         );
+    },
+    /**
+     * Cuando se le da click a una de las leyendas de la grafia carga la
+     * informacion referente a esta y la muesta en una lista.
+    */
+    setupDetails( index, color ) {
+        this.details = Object.values(
+            this.data.data
+        )[ index ];
+
+        this.details.meta.color = color;
+        this.details.meta.index = index;
     }
 });

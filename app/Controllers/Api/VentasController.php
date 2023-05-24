@@ -87,7 +87,7 @@ class VentasController
             AND ! LIKE('<< ANULADA >>*', observac)
         "));
 
-        $fmt->resumenGeneral($faturado, "facturado");
+        $fmt->resumenGeneral($faturado, "liberado");
 
         /** --------------------------------------------------------------------
          *  Radicadas
