@@ -33,14 +33,16 @@ class VentasController
         /* Se realiza la consulta */
         $data = $this->conn->query("
             SELECT
-                tercero,
-                nom_terce,
-                COUNT(tercero)  AS total,
-                SUM(vr_gravado) AS gravado,
-                SUM(vr_exento)  AS exento,
-                SUM(financ_vr)  AS copago,
-                SUM(iva_bienes) AS iva
-            FROM GEMA10.D/VENTAS/DATOS/VTFACC23
+                V.tercero,
+                T.nombre,
+                COUNT(V.tercero)  AS total,
+                SUM(V.vr_gravado) AS gravado,
+                SUM(V.vr_exento)  AS exento,
+                SUM(V.financ_vr)  AS copago,
+                SUM(V.iva_bienes) AS iva
+            FROM GEMA10.D/VENTAS/DATOS/VTFACC23 V
+            LEFT JOIN GEMA10.D/DGEN/DATOS/TERCEROS T
+                ON V.tercero = T.codigo
             WHERE
                 BETWEEN(fecha, CTOD('$start'), CTOD('$end'))
                 AND ! LIKE('<< ANULADA >>*', observac)
@@ -65,25 +67,39 @@ class VentasController
         $fmt->setResumenGeneralSchema($start, $end);
 
         $query = "
-            SELECT tercero, nom_terce,
-                COUNT(tercero)  AS total_records, (
-                    SUM(vr_gravado) +
-                    SUM(vr_exento)  +
-                    SUM(iva_bienes)
-                ) - SUM(financ_vr) AS total
-            FROM GEMA10.D/VENTAS/DATOS/VTFACC23
+            SELECT V.tercero, T.nombre,
+                COUNT(V.tercero)  AS total_records, (
+                    SUM(V.vr_gravado) +
+                    SUM(V.vr_exento)  +
+                    SUM(V.iva_bienes)
+                ) - SUM(V.financ_vr) AS total
+            FROM GEMA10.D/VENTAS/DATOS/VTFACC23 V
+            LEFT JOIN GEMA10.D/DGEN/DATOS/TERCEROS T
+                ON V.tercero = T.codigo
             WHERE %s
             ORDER BY total DESC
             GROUP BY tercero
         ";
 
         /** --------------------------------------------------------------------
-         *  Facturadas
+         *  Sin Radicacion
          * ---------------------------------------------------------------------
         */
         $faturado = $this->conn->query(sprintf($query, "
             BETWEEN(fecha, CTOD('$start'), CTOD('$end'))
-            AND radicacion <= 0
+            AND radicacion = 0
+            AND ! LIKE('<< ANULADA >>*', observac)
+        "));
+
+        $fmt->resumenGeneral($faturado, "sin-radicacion");
+
+        /** --------------------------------------------------------------------
+         *  Liberadas
+         * ---------------------------------------------------------------------
+        */
+        $faturado = $this->conn->query(sprintf($query, "
+            BETWEEN(fecha, CTOD('$start'), CTOD('$end'))
+            AND radicacion = -2
             AND ! LIKE('<< ANULADA >>*', observac)
         "));
 

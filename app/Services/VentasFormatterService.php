@@ -39,7 +39,7 @@ class VentasFormatterService
                 continue;
             }
 
-            array_push($ctrl["categories"], trimUtf8($reg->nom_terce));
+            array_push($ctrl["categories"], trimUtf8($reg->nombre));
             array_push($ctrl["total_facturas"], (int) $reg->total);
             array_push($ctrl["total_facturado"],  (
                 (int) $reg->gravado +
@@ -105,7 +105,7 @@ class VentasFormatterService
 
             $ctrl[] = [
                 "tercero" => $d->tercero,
-                "nombre"  => trimUtf8($d->nom_terce),
+                "nombre"  => trimUtf8($d->nombre),
                 "records" => (int) $d->total_records,
                 "total"   => (int) $d->total
             ];
@@ -128,9 +128,10 @@ class VentasFormatterService
     {
         $this->schema = [
             "data"      => [
-                "liberado" => [],
-                "radicado"  => [],
-                "pendiente" => []
+                "radicado"       => [],
+                "sin-radicacion" => [],
+                "liberado"       => [],
+                "pendiente"      => []
             ],
             "meta"      => [
                 "dates" => [

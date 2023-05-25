@@ -1,7 +1,7 @@
 <div
 x-data="facturacionGeneral"
 x-bind="events"
-class="p-3 p-md-4 p-lg-5 py-lg-3 shadow bg-body text-muted mb-5">
+class="p-3 p-md-4 p-lg-5 py-lg-3 shadow bg-body border-bottom border-top text-muted mb-5">
   <div class="d-flex flex-wrap align-items-center justify-content-between border-bottom p-2 mb-2 gap-2">
     <h4 class="m-0">Facturaci&oacute;n General</h4>
     <?= $this->fetch('./partials/select-dates.php') ?>
