@@ -3,22 +3,25 @@ import ApexCharts from 'apexcharts';
 import { showLoader, hideLoader } from "../partials/loader";
 
 export default () => ({
-    data: {},
+    data: [],
+    years: [],
     chart: undefined,
     chartWrapper: "facturacion-general",
-    /**
-     * Esto nos ayuda a dar formato de moneda a algunos valores.
-    */
-    formatter: new Intl.NumberFormat('es-CO', {
-        style: 'currency', currency: 'COP'
-    }),
     events: {
         ['@new-dates-range']: "updateChart($event.detail)"
     },
     /**
+     * Esto nos ayuda a dar formato de moneda a algunos valores.
+    */
+    formatter: new Intl.NumberFormat('es-CO', {
+        style: 'currency',
+        currency: 'COP',
+        maximumFractionDigits: 0,
+        minimumFractionDigits: 0
+    }),
+    /**
      * Aqui se guarda la informacion de la seccion al dar click
     */
-    details: undefined,
     async init() {
         /**
          * Creamos la grafia `vacia`, sin datos (seires)
@@ -31,17 +34,10 @@ export default () => ({
      * resultado.
     */
     async getData(start, end) {
-        try {
-            showLoader();
-            const API = "https://graficas-fact.local/api";
-            const { data } = await axios.get(
-                `${API}/ventas/resumen-general?start=${start}&end=${end}` // Refactorizar
-            ).finally( () => hideLoader());
-            this.data = data;
-        } catch (e) {
-            alert("Ha ocurrido un error.");
-            console.error(e);
-        }
+        const endPoint = process.env.API + "/ventas/resumen-general";
+        return axios
+            .get(`${endPoint}?start=${start}&end=${end}`)
+            .catch(error => console.error("Axios Handler: ", error));
     },
     /**
      * Handler del evento de actualizacion de fechas
@@ -50,27 +46,39 @@ export default () => ({
         /**
          * Consultamos la base de datos
         */
-        await this.getData(start, end);
+        showLoader();
+        const res = await Promise.all(
+            this.years.map(y => {
+                const s = start.replace(/\w+/, y);
+                const e = end.replace(/\w+/, y);
+
+                return this.getData(s, e);
+            })
+        );
+        hideLoader();
+
+        this.data = res.reduce((acc, data) => {
+            if (typeof data === 'undefined') return acc;
+
+            acc.push(data.data);
+            return acc;
+        }, []);
+
         this.updateChartSeries();
     },
     /**
      * Actualiza las series y las categorias del grafico
     */
-    updateChartSeries(){
+    updateChartSeries() {
         this.chart.updateOptions({
-            labels: Object.keys(this.data.data),
+            series: this.data.map(s => ({
+                name: '20' + s.meta.dates.end.substring(6),
+                data: Object.keys(s.data).map(d => ({
+                    x: d,
+                    y: s.data[d].total
+                }))
+            })),
         });
-
-        this.chart.updateSeries(
-            Object.values(this.data.data).map(_ => _.meta.records),
-        );
-
-        if (typeof this.details !== 'undefined') {
-            this.setupDetails(
-                this.details.meta.index,
-                this.details.meta.color
-            );
-        }
     },
     /**
      * Crea la grafica pero `NO` la renderiza.
@@ -78,18 +86,33 @@ export default () => ({
     createChart() {
         const options = {
             chart: {
-                type: "pie",
-                width: 600,
-                events: {
-                    legendClick: (context, seriesId, config) => {
-                        const color = config.globals.colors[ seriesId ];
-
-                        this.setupDetails(seriesId, color);
-                    }
-                }
+                type: 'bar',
+                height: 350
             },
             noData: {
                 text: "No info..."
+            },
+            yaxis: {
+                labels: {
+                    formatter: (val) => {
+                        return this.formatter.format(Math.round(val / 1000000))
+                            + ' ' + 'M';
+                    }
+                },
+                title: {
+                    text: "Millones"
+                }
+            },
+            stroke: {
+                show: true,
+                width: 2,
+                colors: ['transparent']
+            },
+            dataLabels: {
+                formatter: (val) => {
+                     return this.formatter.format(Math.round(val / 1000000))
+                        + ' ' + 'M';
+                }
             },
             series: [],
             legend: { position: "bottom" }
@@ -99,17 +122,5 @@ export default () => ({
             document.getElementById(this.chartWrapper),
             options
         );
-    },
-    /**
-     * Cuando se le da click a una de las leyendas de la grafia carga la
-     * informacion referente a esta y la muesta en una lista.
-    */
-    setupDetails( index, color ) {
-        this.details = Object.values(
-            this.data.data
-        )[ index ];
-
-        this.details.meta.color = color;
-        this.details.meta.index = index;
     }
 });

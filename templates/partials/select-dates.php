@@ -1,5 +1,5 @@
 <div
-class="small d-flex flex-wrap flex-grow-1 align-items-center"
+class="small d-flex flex-wrap align-items-center"
 x-data="selectDates"
 x-bind="events">
   <span class="fw-bold flex-grow-1">
@@ -23,8 +23,12 @@ x-bind="events">
         type="date"
         class="form-control form-control-sm">
       </div>
-      <button class="btn btn-sm btn-outline-primary" @click="sendEvent">#</button>
+      <button
+      class="btn btn-sm btn-outline-primary p-1 pt-0"
+      @click="sendEvent">
+        <?= $this->fetch('./partials/icons/lupa.php') ?>
+      </button>
     </div>
-    <?= $this->fetch('./partials/selectDates/select-by-month.php') ?>
   </div>
+  <?= $this->fetch('./partials/selectDates/select-by-month.php') ?>
 </div>

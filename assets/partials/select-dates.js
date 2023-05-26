@@ -26,7 +26,7 @@ export default () => ({
     getDates() {
         const ctrl  = new Date();
         const end   = new Date(ctrl.setDate(0));
-        const start = new Date(ctrl.setDate(1))
+        const start = new Date(ctrl.setDate(1));
 
         return [start, end];
     },
