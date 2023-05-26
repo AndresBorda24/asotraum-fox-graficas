@@ -80,43 +80,15 @@ class VentasFormatterService
             throw new \RuntimeException("No has setteado el schema...");
         }
 
-        /** Estas variables son para evitar escribir $this->schema[$k] */
-        $ctrl         = [];
-        $totalCash    = 0;
-        $totalRecords = 0;
+        $d = $data->fetch();
 
-        while ($d = $data->fetch()) {
-            $totalCash    += $d->total;
-            $totalRecords += $d->total_records;
-
-            if (count($ctrl) >= 5) {
-                if (count($ctrl) === 5) {
-                    $ctrl[5] = [
-                        "nombre"  => "otros",
-                        "records" => 0,
-                        "total"   => 0
-                    ];
-                }
-
-                $ctrl[5]["records"] += (int) $d->total_records;
-                $ctrl[5]["total"]   += $d->total;
-                continue;
-            }
-
-            $ctrl[] = [
-                "tercero" => $d->tercero,
-                "nombre"  => trimUtf8($d->nombre),
-                "records" => (int) $d->total_records,
-                "total"   => (int) $d->total
-            ];
-        }
-
-        $this->schema["meta"]["total"]["records"] += $totalRecords;
-        $this->schema["meta"]["total"]["cash"]    += $totalCash;
-        $this->schema["data"][$k]["data"] = $ctrl;
-        $this->schema["data"][$k]["meta"] = [
-            "records" => $totalRecords,
-            "total"   => $totalCash
+        $this->schema["meta"]["total"]["records"] += ($d === false)
+            ? 0 : $d->total_records;
+        $this->schema["meta"]["total"]["cash"]    += ($d === false)
+            ? 0 : $d->total;
+        $this->schema["data"][$k] = [
+            "records" => ($d === false) ? 0 : $d->total_records,
+            "total"   => ($d === false) ? 0 : $d->total
         ];
     }
 
