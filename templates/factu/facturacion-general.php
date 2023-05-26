@@ -2,9 +2,11 @@
 x-data="facturacionGeneral"
 x-bind="events"
 class="p-3 p-md-4 p-lg-5 py-lg-3 text-muted mb-5">
-  <div class="border-bottom p-2 mb-2 gap-2">
-    <h4 class="m-0">Facturaci&oacute;n General</h4>
-    <?= $this->fetch('./partials/add-years.php') ?>
+  <div class="border-bottom d-flex flex-wrap p-2 mb-2 gap-2 align-items-center">
+    <div class="flex-grow-1">
+      <h4 class="m-0">Facturaci&oacute;n General</h4>
+      <?= $this->fetch('./partials/add-years.php') ?>
+    </div>
     <?= $this->fetch('./partials/select-dates.php') ?>
   </div>
 

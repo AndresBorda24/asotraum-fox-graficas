@@ -5,7 +5,7 @@ style="
   justify-content: center;
 ">
   <template x-for="d in data">
-    <div class="small border p-1">
+    <div class="small border p-1 bg-body">
       <div class="p-1 mb-1 border-bottom">
         <span
         x-text="'20' + d.meta.dates.end.substring(6)"

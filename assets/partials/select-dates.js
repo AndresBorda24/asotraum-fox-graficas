@@ -60,13 +60,14 @@ export default () => ({
         this.dateStart = this.getStringDate( new Date(start) );
         this.sendEvent();
     },
+    /**
+     * Texto que dice el rango de las fechas
+    */
     getText() {
         const end   = new Date(this.dateEnd);
         const start = new Date(this.dateStart);
         const options = {
-            weekday: 'long',
-            // year: 'numeric',
-            timeZone: 'UTC',
+            timeZone: 'UCT',
             month: 'long',
             day: 'numeric'
         };
