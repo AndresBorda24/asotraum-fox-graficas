@@ -61,24 +61,22 @@ class VentasController
         // Fechas para consultas de fox (las toma del middleware)
         $start = $request->getAttribute("start");
         $end   = $request->getAttribute("end");
+        $year  = substr($start, 6);
 
         // Lo usamos para dar formato a la respuesta.
         $fmt = new VtFormatter();
         $fmt->setResumenGeneralSchema($start, $end);
 
         $query = "
-            SELECT V.tercero, T.nombre,
-                COUNT(V.tercero)  AS total_records, (
+            SELECT COUNT(*)  AS total_records, (
                     SUM(V.vr_gravado) +
                     SUM(V.vr_exento)  +
                     SUM(V.iva_bienes)
                 ) - SUM(V.financ_vr) AS total
-            FROM GEMA10.D/VENTAS/DATOS/VTFACC23 V
+            FROM GEMA10.D/VENTAS/DATOS/VTFACC$year V
             LEFT JOIN GEMA10.D/DGEN/DATOS/TERCEROS T
                 ON V.tercero = T.codigo
             WHERE %s
-            ORDER BY total DESC
-            GROUP BY tercero
         ";
 
         /** --------------------------------------------------------------------
