@@ -4,6 +4,7 @@ import { showLoader, hideLoader } from "../partials/loader";
 
 export default () => ({
     data: {},
+    years: [],
     chart: undefined,
     chartWrapper: "resumen-facturado",
     formatter: new Intl.NumberFormat('es-CO', {

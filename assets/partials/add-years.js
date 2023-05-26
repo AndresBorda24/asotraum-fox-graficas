@@ -1,3 +1,7 @@
+/**
+ * Para agregar este componente el padre DEBE tener una propiedad llamada years,
+ * y esta debe ser igualada a un array vacio []
+*/
 export default (parentYears) => ({
     years: parentYears,
     selectYear: '',
