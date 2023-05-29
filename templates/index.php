@@ -18,6 +18,8 @@
   <?= $this->fetch("./factu/facturacion-general.php") ?>
   <hr>
   <?= $this->fetch("./factu/resumen-facturado.php") ?>
+  <hr>
+  <?= $this->fetch("./factu/top-facturadores.php") ?>
   <?= $this->fetch("./partials/loader.php") ?>
 </body>
 </html>
