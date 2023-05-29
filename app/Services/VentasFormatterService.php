@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Services;
@@ -12,40 +13,34 @@ class VentasFormatterService
     /**
      * Da formato a los resultados de la consulta para la grafica de resumen
      * de facturas.
-    */
+     */
     public function facturado(\PDOStatement $data): void
     {
         $ctrl = $this->schema;
 
-        while($reg = $data->fetch()) {
-            if( count($ctrl["total_facturado"]) >= 10 ) {
-                $ctrl["categories"][10] = "otros";
+        while ($reg = $data->fetch()) {
+            $ctrl["meta"]["total"]["records"] += (int) $reg->facturas;
+            $ctrl["meta"]["total"]["cash"]    += (int) $reg->total;
 
-                if(! isset($ctrl["total_facturado"][10])) {
-                    $ctrl["total_facturado"][10] = 0;
+
+            if (count($ctrl["data"]) >= 10) {
+                if (!array_key_exists("otros", $ctrl["data"])) {
+                    $ctrl["data"]["otros"] = [
+                        "facturas" => 0,
+                        "total"    => 0
+                    ];
                 }
 
-                if(! isset($ctrl["total_facturas"][10])) {
-                    $ctrl["total_facturas"][10] = 0;
-                }
-
-                $ctrl["total_facturas"][10]  += (int) $reg->total;
-                $ctrl["total_facturado"][10] += (
-                    (int) $reg->gravado +
-                    (int) $reg->exento +
-                    (int) $reg->iva
-                ) - (int) $reg->copago;
+                $ctrl["data"]["otros"]["facturas"] += (int) $reg->facturas;
+                $ctrl["data"]["otros"]["total"]    += (int) $reg->total;
 
                 continue;
             }
 
-            array_push($ctrl["categories"], trimUtf8($reg->nombre));
-            array_push($ctrl["total_facturas"], (int) $reg->total);
-            array_push($ctrl["total_facturado"],  (
-                (int) $reg->gravado +
-                (int) $reg->exento +
-                (int) $reg->iva
-            ) - (int) $reg->copago);
+            $ctrl["data"][trimUtf8($reg->nombre)] = [
+                "facturas" => (int) $reg->facturas,
+                "total"    => (int) $reg->total
+            ];
         }
 
         $this->schema = $ctrl;
@@ -54,14 +49,16 @@ class VentasFormatterService
     /**
      * @param string $start Fecha de inicio de la consulta
      * @param string $end   Fecha de corte de la consulta
-    */
-    public function setfacturadoSchema(string $start, string $end): void
+     */
+    public function setFacturadoSchema(string $start, string $end): void
     {
         $this->schema = [
-            "total_facturado" => [],
-            "total_facturas"  => [],
-            "categories"      => [],
-            "meta"            => [
+            "data"      => [],
+            "meta"      => [
+                "total" => [
+                    "records" => 0,
+                    "cash"    => 0
+                ],
                 "dates" => [
                     "start" => $start,
                     "end"   => $end
@@ -73,7 +70,7 @@ class VentasFormatterService
     /**
      * Da formato a los resultados de la consulta para la grafica de resumen
      * general de ventas.
-    */
+     */
     public function resumenGeneral(\PDOStatement $data, string $k): void
     {
         if ($this->schema === []) {
@@ -95,7 +92,7 @@ class VentasFormatterService
     /**
      * @param string $start Fecha de inicio de la consulta
      * @param string $end   Fecha de corte de la consulta
-    */
+     */
     public function setResumenGeneralSchema(string $start, string $end): void
     {
         $this->schema = [
@@ -120,7 +117,7 @@ class VentasFormatterService
 
     /**
      * Retorna el array formateado con la informacion de las  queries.
-    */
+     */
     public function getData(): array
     {
         return $this->schema;
