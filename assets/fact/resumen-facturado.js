@@ -108,7 +108,7 @@ export default () => ({
                     return [puesto, ...val, total];
                 },
                 style: {
-                    fontSize: "8px",
+                    fontSize: "9px",
                     colors: ["#414141"]
                 }
             },

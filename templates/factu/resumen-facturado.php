@@ -10,13 +10,13 @@ class="p-3 p-md-4 p-lg-5 py-lg-3 text-muted my-5">
     <?= $this->fetch('./partials/select-dates.php') ?>
   </div>
 
-  <div class="d-flex flex-column gap-2">
+  <div class="d-flex flex-column shadow">
     <!-- Esta Grafica solo muestra los resultados totales  -->
     <div x-data="resumenFacturadoTotales()">
-      <div class="flex-grow-1 border bg-body" id="resumen-facturado-total"></div>
+      <div class="flex-grow-1 border border-bottom-0 bg-body" id="resumen-facturado-total"></div>
     </div>
 
     <!-- Contenedor de la grafica -->
-    <div class="flex-grow-1 border bg-body shadow" id="resumen-facturado"></div>
+    <div class="flex-grow-1 border bg-body" id="resumen-facturado"></div>
   </div>
 </div>
