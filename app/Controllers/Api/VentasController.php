@@ -28,25 +28,25 @@ class VentasController
 
         // Lo usamos para dar formato a la respuesta.
         $fmt = new VtFormatter();
-        $fmt->setfacturadoSchema($start, $end);
+        $fmt->setFacturadoSchema($start, $end);
 
         /* Se realiza la consulta */
         $data = $this->conn->query("
             SELECT
                 V.tercero,
                 T.nombre,
-                COUNT(V.tercero)  AS total,
-                SUM(V.vr_gravado) AS gravado,
-                SUM(V.vr_exento)  AS exento,
-                SUM(V.financ_vr)  AS copago,
-                SUM(V.iva_bienes) AS iva
+                COUNT(V.tercero)  AS facturas, (
+                    SUM(V.vr_gravado) +
+                    SUM(V.vr_exento)  +
+                    SUM(V.iva_bienes)
+                ) - SUM(V.financ_vr) AS total
             FROM GEMA10.D/VENTAS/DATOS/VTFACC23 V
             LEFT JOIN GEMA10.D/DGEN/DATOS/TERCEROS T
                 ON V.tercero = T.codigo
             WHERE
                 BETWEEN(fecha, CTOD('$start'), CTOD('$end'))
                 AND ! LIKE('<< ANULADA >>*', observac)
-            ORDER BY exento DESC
+            ORDER BY total DESC
             GROUP BY tercero
         ");
 
