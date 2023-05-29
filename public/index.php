@@ -42,6 +42,8 @@ $app->group("/api/ventas", function(RouteCollectorProxy $group) {
     $group->get("/anuladas", [VentasController::class, "anuladas"]);
     $group->get("/resumen-general", [VentasController::class, "resumenGeneral"])
         ->add(StartEndDatesMiddleware::class);
+    $group->get("/top-facturadores", [VentasController::class, "topFacturadores"])
+        ->add(StartEndDatesMiddleware::class);
 });
 
 $app->run();

@@ -25,6 +25,7 @@ class VentasController
         // Fechas para consultas de fox (las toma del middleware)
         $start = $request->getAttribute("start");
         $end   = $request->getAttribute("end");
+        $year  = substr($start, 6);
 
         // Lo usamos para dar formato a la respuesta.
         $fmt = new VtFormatter();
@@ -40,7 +41,7 @@ class VentasController
                     SUM(V.vr_exento)  +
                     SUM(V.iva_bienes)
                 ) - SUM(V.financ_vr) AS total
-            FROM GEMA10.D/VENTAS/DATOS/VTFACC23 V
+            FROM GEMA10.D/VENTAS/DATOS/VTFACC$year V
             LEFT JOIN GEMA10.D/DGEN/DATOS/TERCEROS T
                 ON V.tercero = T.codigo
             WHERE
@@ -132,30 +133,45 @@ class VentasController
         return responseJson($response, $fmt->getData());
     }
 
-    public function anuladas(Response $response): Response
+    public function topFacturadores(Request $request, Response $response): Response
     {
+        // Fechas para consultas de fox (las toma del middleware)
+        $start = $request->getAttribute("start");
+        $end   = $request->getAttribute("end");
+        $year  = substr($start, 6);
+
         $data = $this->conn->query("
-            SELECT
-                tercero,
-                nom_terce,
-                COUNT(tercero)  AS total
-            FROM GEMA10.D/VENTAS/DATOS/VTFACC18
+            SELECT V.quien, M.nombre, (
+                    SUM(V.vr_gravado) +
+                    SUM(V.vr_exento)  +
+                    SUM(V.iva_bienes)
+                ) - SUM(V.financ_vr) AS total
+            FROM GEMA10.D/VENTAS/DATOS/VTFACC$year V
+            LEFT JOIN GEMA10.D/DGEN/DATOS/MAOPERA2 M
+                ON V.quien = M.id
             WHERE
-                BETWEEN(fecha, CTOD('04/18/2023'), CTOD('05/18/2023'))
-                AND LIKE('<< ANULADA >>*', observac)
+                BETWEEN(fecha, CTOD('$start'), CTOD('$end'))
+                AND ! LIKE('<< ANULADA >>*', observac)
             ORDER BY total DESC
-            GROUP BY tercero
+            GROUP BY quien
         ");
 
-        $formatted = [];
+        $formatted = [
+            "data" => [],
+            "meta" => [
+                "dates" => [
+                    "start" => $start,
+                    "end"   => $end,
+                    "year"  => $year
+                ]
+            ]
+        ];
 
-        while($reg = $data->fetch()) {
-            if (! array_key_exists($reg->total, $formatted)) {
-                $formatted[$reg->total] = array();
-            }
-
-            array_push($formatted[ $reg->total ], [
-                $reg->tercero => trimUtf8($reg->nom_terce)
+        while(($reg = $data->fetch()) && count($formatted["data"]) <= 15) {
+            array_push($formatted["data"], [
+                "id"    => trimUtf8($reg->quien),
+                "quien" => trimUtf8($reg->nombre),
+                "cuanto"=> (int) $reg->total
             ]);
         }
 
