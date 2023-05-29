@@ -63,7 +63,6 @@ export default () => ({
                 y: {
                     formatter: (val) => this.formatter
                         .format(parseInt(val))
-                        + ' ' + 'M'
                 }
             },
             xaxis: {

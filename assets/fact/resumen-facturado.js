@@ -5,10 +5,15 @@ import { showLoader, hideLoader } from "../partials/loader";
 export default () => ({
     data: {},
     years: [],
+    // Grafica Principal
     chart: undefined,
     chartWrapper: "resumen-facturado",
+    // Esto nos permite imprimir el total en pesos $ xxx.xxx.xxx
     formatter: new Intl.NumberFormat('es-CO', {
-        style: 'currency', currency: 'COP'
+        style: 'currency',
+        currency: 'COP',
+        maximumFractionDigits: 0,
+        minimumFractionDigits: 0
     }),
     events: {
         ['@new-dates-range']: "updateChart($event.detail)"
@@ -26,12 +31,10 @@ export default () => ({
     */
     async getData(start, end) {
         try {
-            showLoader();
-            const API = "https://graficas-fact.local/api";
-            const { data } = await axios.get(
-                `${API}/ventas/facturado?start=${start}&end=${end}` // Refactorizar
-            ).finally( () => hideLoader());
-            this.data = data;
+            const API = process.env.API + "/ventas/facturado";
+            return axios
+                .get(`${API}?start=${start}&end=${end}`)
+                .catch(error => console.error("Axios Handler: ", error));
         } catch (e) {
             alert("Ha ocurrido un error.");
             console.error(e);
@@ -41,29 +44,37 @@ export default () => ({
      * Handler del evento de actualizacion de fechas
     */
     async updateChart({ start, end }) {
-        /**
-         * Consultamos la base de datos
-        */
-        await this.getData(start, end);
+        showLoader();
+        const res = await Promise.all(
+            this.years.map(y => {
+                const s = start.replace(/\w+/, y);
+                const e = end.replace(/\w+/, y);
+
+                return this.getData(s, e);
+            })
+        ).finally(hideLoader);
+
+        this.data = res.map(r => r.data);
+
         this.updateChartSeries();
     },
     /**
      * Actualiza las series y las categorias del grafico
     */
-    updateChartSeries(){
-        this.chart.updateOptions({
-            labels: this.data.categories
+    updateChartSeries() {
+        const mainChart = this.data.map(d => {
+            const data = Object.keys(d.data).map(k => ({
+                x: k.split(' '),
+                y: d.data[k].total
+            }));
+
+            return {
+                data,
+                name: "20" + d.meta.dates.end.substring(6)
+            };
         });
 
-        this.chart.updateSeries([{
-            type: "column",
-            name: "Facturado por Entidad",
-            data: this.data.total_facturado
-        }, {
-            type: "line",
-            name: "Cantidad Total de Facturas",
-            data: this.data.total_facturas
-        }]);
+        this.chart.updateSeries(mainChart);
     },
     /**
      * Crea la grafica pero `NO` la renderiza.
@@ -71,38 +82,43 @@ export default () => ({
     createChart() {
         const options = {
             chart: {
-                type: "line",
-                height: '520px'
+                type: "treemap",
+                height: '540px',
+                stacked: true
             },
             noData: {
                 text: "No info..."
             },
             series: [],
-            legend: { position: "top" },
+            legend: {
+                show: true,
+                showForSingleSeries: true,
+                position: "top"
+            },
             dataLabels: {
                 enabled: true,
-                enabledOnSeries: [1]
-            },
-            xaxis: {
-                type: 'categories',
-                labels: {
-                    hideOverlappingLabels: true,
-                    rotateAlways: true,
-                    minHeight: 120,
-                    trim: true,
-                    rotate: -45,
-                    style: { fontSize: '10px' }
+                offsetY: -15,
+                formatter: (val, opts) => {
+                    const total = this.formatter.format(Math.round(
+                            parseInt(opts.value) / 1000000
+                        ))
+                        + ' ' + 'M';
+                    const puesto = (((opts.dataPointIndex) % 11) + 1) + "). ";
+
+                    return [puesto, ...val, total];
                 },
-            },
-            yaxis: [{
-                title: { text: 'Facturado' },
-                labels: {
-                    formatter: (val) => this.formatter.format(parseInt(val))
+                style: {
+                    fontSize: "8px",
+                    colors: ["#414141"]
                 }
-            }, {
-                opposite: true,
-                title: { text: 'Cantidad de Facturas' }
-            }]
+            },
+            tooltip: {
+                y: {
+                    formatter: (val) => this.formatter
+                        .format(Math.round(parseInt(val) / 1000000))
+                        + ' ' + 'M'
+                }
+            },
         }
 
         this.chart = new ApexCharts(

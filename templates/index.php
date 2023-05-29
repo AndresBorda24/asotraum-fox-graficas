@@ -16,6 +16,7 @@
 
   <!-- Graficas -->
   <?= $this->fetch("./factu/facturacion-general.php") ?>
+  <hr>
   <?= $this->fetch("./factu/resumen-facturado.php") ?>
   <?= $this->fetch("./partials/loader.php") ?>
 </body>

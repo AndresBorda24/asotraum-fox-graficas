@@ -12,7 +12,7 @@ class="p-3 p-md-4 p-lg-5 py-lg-3 text-muted mb-5">
 
   <div>
     <!-- Contenedor de la grafica -->
-    <div class="mx-auto bg-body border" id="facturacion-general"></div>
+    <div class="mx-auto bg-body border shadow" id="facturacion-general"></div>
 
     <!-- Muestra los totales de los anios seleccionados -->
     <?= $this->fetch('./factu/partials/fg-detalles.php') ?>
