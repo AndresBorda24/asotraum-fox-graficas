@@ -1,13 +1,13 @@
 import axios from 'axios';
 import ApexCharts from 'apexcharts';
-import { showLoader, hideLoader } from "../partials/loader";
+import { showLoader, hideLoader } from "../../partials/loader";
 
 export default () => ({
     data: {},
-    years: [new Date().getFullYear()],
+    years: [],
     // Grafica Principal
     chart: undefined,
-    chartWrapper: "top-facturadores",
+    chartWrapper: "resumen-facturado",
     // Esto nos permite imprimir el total en pesos $ xxx.xxx.xxx
     formatter: new Intl.NumberFormat('es-CO', {
         style: 'currency',
@@ -15,32 +15,6 @@ export default () => ({
         maximumFractionDigits: 0,
         minimumFractionDigits: 0
     }),
-    /**
-     * Estos son los colores que tomaran las columnas
-     * Se hizo de esta forma para evitar duplicados.
-    */
-    colors: [
-        "#f44336",
-        "#e81e63",
-        "#9c27b0",
-        "#673ab7",
-        "#3f51b5",
-        "#2196f3",
-        "#03a9f4",
-        "#00bcd4",
-        "#009688",
-        "#4caf50",
-        "#8bc34a",
-        "#cddc39",
-        "#ffeb3b",
-        "#ffc107",
-        "#ff9800",
-        "#ff5722",
-        "#795548",
-        "#9e9e9e",
-        "#607d8b",
-        "#000000"
-    ],
     events: {
         ['@new-dates-range']: "updateChart($event.detail)"
     },
@@ -57,7 +31,7 @@ export default () => ({
     */
     async getData(start, end) {
         try {
-            const API = process.env.API + "/ventas/top-facturadores";
+            const API = process.env.API + "/ventas/facturado";
             return axios
                 .get(`${API}?start=${start}&end=${end}`)
                 .catch(error => console.error("Axios Handler: ", error));
@@ -82,93 +56,82 @@ export default () => ({
 
         this.data = res.map(r => r.data);
 
-        /**
-         * Una vez que tenemos la data, actualizamos la grafica
-        */
         this.updateChartSeries();
     },
     /**
      * Actualiza las series y las categorias del grafico
     */
     updateChartSeries() {
-        const _ = this.data.map(d => {
-            const data = d.data.reduce((acc, _) => {
-                acc.labels.push(_.quien);
-                acc.data.push(_.cuanto);
+        const mainChart = this.data.map(d => {
+            const data = Object.keys(d.data).map(k => ({
+                x: k.split(' '),
+                y: d.data[k].total
+            }));
 
-                return acc;
-            }, { labels: [], data: [] });
-
-            return data;
+            return {
+                data,
+                name: "20" + d.meta.dates.end.substring(6)
+            };
         });
 
-
-        this.chart.updateOptions({
-            xaxis: {
-                categories: _[0].labels
-            },
-            series: [{
-                name: "Total Facturado",
-                data: _[0].data
-            }]
-        });;
+        this.chart.updateSeries(mainChart);
     },
     /**
      * Crea la grafica pero `NO` la renderiza.
     */
     createChart() {
         const options = {
-            series: [],
             chart: {
-                type: 'bar',
-                height: 600
+                type: "treemap",
+                height: '540px',
+                stacked: true
             },
-            colors: this.colors,
-            legend: { show: false },
-            plotOptions: {
-                bar: {
-                    borderRadius: 4,
-                    horizontal: true,
-                    distributed: true
-                }
+            noData: {
+                text: "No info..."
+            },
+            series: [],
+            legend: {
+                show: true,
+                showForSingleSeries: true,
+                position: "top"
             },
             dataLabels: {
                 enabled: true,
-                formatter: (val) => {
+                offsetY: -15,
+                formatter: (val, opts) => {
                     const total = this.formatter.format(Math.round(
-                        parseInt(val) / 1000000
-                    ))
+                            parseInt(opts.value) / 1000000
+                        ))
                         + ' ' + 'M';
+                    const puesto = (((opts.dataPointIndex) % 11) + 1) + "). ";
 
-                    return total;
+                    return [puesto, ...val, total];
                 },
                 style: {
-                    fontSize: "12px",
+                    fontSize: "9px",
                     colors: ["#414141"]
                 }
             },
             tooltip: {
                 y: {
                     formatter: (val) => this.formatter
-                        .format(parseInt(val))
+                        .format(Math.round(parseInt(val) / 1000000))
+                        + ' ' + 'M'
                 }
             },
-            xaxis: {
-                labels: {
-                    formatter: (val) => {
-                        return this.formatter.format(Math.round(val / 1000000))
-                            + ' ' + 'M';
-                    }
-                },
-                title: {
-                    text: "Millones Facturados"
-                }
-            },
-        };
+        }
 
         this.chart = new ApexCharts(
             document.getElementById(this.chartWrapper),
             options
+        );
+    },
+    /**
+     * Obtiene el total faturado general
+    */
+    getTotal() {
+        return this.formatter.format(
+            this.data.total_facturado.reduce((a, f) => a + f, 0)
         );
     }
 });

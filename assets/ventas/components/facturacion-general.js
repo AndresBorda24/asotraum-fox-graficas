@@ -1,6 +1,6 @@
 import axios from 'axios';
 import ApexCharts from 'apexcharts';
-import { showLoader, hideLoader } from "../partials/loader";
+import { showLoader, hideLoader } from "../../partials/loader";
 
 export default () => ({
     data: [],
