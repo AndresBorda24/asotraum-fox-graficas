@@ -1,12 +1,15 @@
 import Alpine from "alpinejs";
-import addYears from "./partials/add-years";
-import rfTotales from "./fact/partials/rf-totales";
-import selectDates from "./partials/select-dates";
-import selectByMonth from "./partials/selectDates/select-by-month";
-import resumenFacturado from "./fact/resumen-facturado";
-import facturacionGeneral from "./fact/facturacion-general";
-import topFacturadores from "./fact/top-facturadores";
-import "./css/index.css";
+// Partials Generales
+import addYears from "../partials/add-years";
+import selectDates from "../partials/select-dates";
+import selectByMonth from "../partials/selectDates/select-by-month";
+// Componentes Especificos
+import rfTotales from "./partials/rf-totales";
+import topFacturadores from "./components/top-facturadores";
+import resumenFacturado from "./components/resumen-facturado";
+import facturacionGeneral from "./components/facturacion-general";
+
+import "../css/index.css";
 
 window.Alpine = Alpine;
 

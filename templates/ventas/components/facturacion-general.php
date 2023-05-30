@@ -15,6 +15,6 @@ class="p-3 p-md-4 p-lg-5 py-lg-3 text-muted mb-5">
     <div class="mx-auto bg-body border shadow" id="facturacion-general"></div>
 
     <!-- Muestra los totales de los anios seleccionados -->
-    <?= $this->fetch('./factu/partials/fg-detalles.php') ?>
+    <?= $this->fetch('./ventas/partials/fg-detalles.php') ?>
   </div>
 </div>
