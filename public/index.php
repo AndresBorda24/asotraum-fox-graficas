@@ -1,16 +1,14 @@
 <?php
 declare(strict_types=1);
 
-use App\Views;
 use DI\Container;
 use \DI\Bridge\Slim\Bridge;
-use Slim\Routing\RouteCollectorProxy;
-use App\Controllers\Api\VentasController;
-use App\Middleware\StartEndDatesMiddleware;
-use Psr\Http\Message\ResponseInterface as Response;
 
 require __DIR__ . "/../vendor/autoload.php";
+require __DIR__ . "/../routes/web.php";
+require __DIR__ . "/../routes/api.php";
 
+/** Cargamos variables de entorno */
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ ."/..");
 $dotenv->load();
 
@@ -30,20 +28,9 @@ $app->addRoutingMiddleware();
 $errorMiddleware = $app->addErrorMiddleware(true, false, false);
 
 /**
- * Rutas de la app
+ * Rutas de la aplicacion
 */
-$app->get("/", function(Response $response, Views $views): Response {
-    return $views->render($response, "index.php");
-});
-
-$app->group("/api/ventas", function(RouteCollectorProxy $group) {
-    $group->get("/facturado", [VentasController::class, "facturado"])
-        ->add(StartEndDatesMiddleware::class);
-    $group->get("/anuladas", [VentasController::class, "anuladas"]);
-    $group->get("/resumen-general", [VentasController::class, "resumenGeneral"])
-        ->add(StartEndDatesMiddleware::class);
-    $group->get("/top-facturadores", [VentasController::class, "topFacturadores"])
-        ->add(StartEndDatesMiddleware::class);
-});
+loadWebRoutes($app);
+loadApiRoutes($app);
 
 $app->run();

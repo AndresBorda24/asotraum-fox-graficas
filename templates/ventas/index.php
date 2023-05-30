@@ -15,11 +15,11 @@
   <?= $this->fetch("./partials/header.php") ?>
 
   <!-- Graficas -->
-  <?= $this->fetch("./factu/facturacion-general.php") ?>
+  <?= $this->fetch("./ventas/components/facturacion-general.php") ?>
   <hr>
-  <?= $this->fetch("./factu/resumen-facturado.php") ?>
+  <?= $this->fetch("./ventas/components/resumen-facturado.php") ?>
   <hr>
-  <?= $this->fetch("./factu/top-facturadores.php") ?>
+  <?= $this->fetch("./ventas/components/top-facturadores.php") ?>
   <?= $this->fetch("./partials/loader.php") ?>
 </body>
 </html>
