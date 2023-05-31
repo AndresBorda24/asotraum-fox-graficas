@@ -19,4 +19,11 @@ class VentasController
 
         return $this->views->render($response, "ventas/index.php");
     }
+
+    public function grilla(Request $request, Response $response): Response
+    {
+        $this->views->setRouteContext($request);
+
+        return $this->views->render($response, "ventas/grilla.php");
+    }
 }

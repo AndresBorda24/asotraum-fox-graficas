@@ -177,5 +177,72 @@ class VentasController
 
         return responseJson($response, $formatted);
     }
+
+    public function grilla(Request $request, Response $response): Response
+    {
+        // Fechas para consultas de fox (las toma del middleware)
+        $start = $request->getAttribute("start");
+        $end   = $request->getAttribute("end");
+        $year  = substr($start, 6);
+
+        $data = $this->conn->query("
+            SELECT
+                V.fecha, V.observac, V.fech_rad, V.radicacion,
+                V.tercero, T.nombre AS nombre_t,
+                M.nombre AS nombre_q, (
+                    V.vr_gravado +
+                    V.vr_exento  +
+                    V.iva_bienes
+                ) - V.financ_vr AS total
+            FROM GEMA10.D/VENTAS/DATOS/VTFACC$year V
+            LEFT JOIN GEMA10.D/DGEN/DATOS/MAOPERA2 M
+                ON V.quien = M.id
+            LEFT JOIN GEMA10.D/DGEN/DATOS/TERCEROS T
+                ON V.tercero = T.codigo
+            WHERE
+                BETWEEN(V.fecha, CTOD('$start'), CTOD('$end'))
+            ORDER BY V.fecha
+        ");
+
+        $formatted = [
+            "data" => [],
+            "meta" => [
+                "columns" => [
+                    "Tercero",
+                    "Nom.Tercero",
+                    "Quien",
+                    "Fecha",
+                    "Fecha.Rad",
+                    "Radicacion",
+                    "Valor Factura",
+                    "Observacion",
+                ],
+                "dates" => [
+                    "start" => $start,
+                    "end"   => $end,
+                    "year"  => $year
+                ]
+            ]
+        ];
+
+        while($reg = $data->fetch()) {
+            $fech_rad = trimUtf8($reg->fech_rad);
+
+            array_push($formatted["data"], [
+                trimUtf8($reg->tercero),
+                trimUtf8($reg->nombre_t),
+                trimUtf8($reg->nombre_q),
+                trimUtf8($reg->fecha),
+                ($fech_rad === '1899-12-30') ? null : $fech_rad,
+                trimUtf8($reg->radicacion),
+                "$ " . number_format((int) $reg->total),
+                trimUtf8($reg->observac)
+            ]);
+        }
+
+
+
+        return responseJson($response, $formatted);
+    }
 }
 
