@@ -12,9 +12,9 @@
 
   <!-- Mensual -->
   <div class="d-flex w-100 flex-wrap">
-    <template x-for="(month, index) in months">
+    <template x-for="(month, index) in months" :key="index">
       <button
-      @click="byMonth( index + 1 )"
+      @click="byMonth( index )"
       x-text="month"
       class="btn btn-sm col-sm-1 col-2" style="font-size: .65rem;">
       </button>
