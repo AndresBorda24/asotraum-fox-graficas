@@ -21,8 +21,11 @@
   x-bind="events"
   class="small my-4 container">
     <?= $this->fetch('./partials/select-dates.php') ?>
-
-    <table id="datatable" class="display mt-5 shadow compact small">
+    <a
+    :href="excelUrl"
+    target="_blank"
+    class="btn btn-success mt-3">Exportar a Excel</a>
+    <table id="datatable" class="display shadow compact small">
       <thead>
         <tr>
           <th>Tercero</th>

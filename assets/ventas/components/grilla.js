@@ -5,11 +5,14 @@ import jQuery from "jquery";
 import DataTable from 'datatables.net-dt';
 
 export default () => ({
+    // Aqui se almaciena la info en cada solicitus.
     data: {},
+    // Url de donde se descarga el excel
+    excelUrl: process.env.API + "/ventas/excel",
+    endPoint: process.env.API + "/ventas/grilla",
     datatable: new DataTable("#datatable", {
         aaSorting: [3, "asc"]
     }),
-    endPoint: process.env.API + "/ventas/grilla",
     events: {
         ['@new-dates-range']: "getData($event.detail.start, $event.detail.end)"
     },
