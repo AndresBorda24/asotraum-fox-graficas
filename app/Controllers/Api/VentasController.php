@@ -10,6 +10,7 @@ use App\ConnectionFox;
 use App\Services\ExcelService;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Services\VentasFormatterService as VtFormatter;
+use App\Services\VentasResumenPorEntidadService;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 use function App\trimUtf8;
@@ -246,6 +247,21 @@ class VentasController
         }
 
         return responseJson($response, $formatted);
+    }
+
+    public function resumenPorEntidad(Request $request, Response $response)
+    {
+        // Fechas para consultas de fox (las toma del middleware)
+        $start = $request->getAttribute("start");
+        $end   = $request->getAttribute("end");
+
+        $service = new VentasResumenPorEntidadService(
+            $this->conn,
+            $start,
+            $end
+        );
+
+        return responseJson($response, $service->getData());
     }
 
     /**

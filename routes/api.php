@@ -27,6 +27,10 @@ function loadApiRoutes(App $app): void {
             VentasController::class,
             "topFacturadores"
         ]);
+        $group->get("/resumen-x-entidad", [
+            VentasController::class,
+            "resumenPorEntidad"
+        ]);
         $group->get("/excel", [
             VentasController::class,
             "excel"
