@@ -12,5 +12,6 @@ return [
     "assets" => [
         "templates"   => __DIR__ . "/.." .$_ENV["TEMPLATES"],
         "entrypoints" => __DIR__ . "/.." .$_ENV["ENTRYPOINTS_PATH"]
-    ]
+    ],
+    "temp" => __DIR__ . "/../temp"
 ];
