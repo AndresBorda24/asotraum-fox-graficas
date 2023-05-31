@@ -5,6 +5,7 @@ namespace App\Controllers;
 
 use App\Views;
 use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 
 class VentasController
 {
@@ -12,8 +13,17 @@ class VentasController
         private Views $views
     ) {}
 
-    public function index(Response $response): Response
+    public function index(Request $request, Response $response): Response
     {
+        $this->views->setRouteContext($request);
+
         return $this->views->render($response, "ventas/index.php");
+    }
+
+    public function grilla(Request $request, Response $response): Response
+    {
+        $this->views->setRouteContext($request);
+
+        return $this->views->render($response, "ventas/grilla.php");
     }
 }

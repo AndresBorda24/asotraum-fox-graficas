@@ -11,6 +11,10 @@ use App\Middleware\StartEndDatesMiddleware;
 */
 function loadApiRoutes(App $app): void {
     $app->group("/api/ventas", function(RouteCollectorProxy $group) {
+        $group->get("/grilla", [
+            VentasController::class,
+            "grilla"
+        ]);
         $group->get("/facturado", [
             VentasController::class,
             "facturado"
@@ -22,6 +26,10 @@ function loadApiRoutes(App $app): void {
         $group->get("/top-facturadores", [
             VentasController::class,
             "topFacturadores"
+        ]);
+        $group->get("/excel", [
+            VentasController::class,
+            "excel"
         ]);
     })->add(StartEndDatesMiddleware::class);
 }

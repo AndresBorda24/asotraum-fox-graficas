@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 use App\Config;
 use App\ConnectionFox;
-use Slim\Views\PhpRenderer;
 
 return [
     Config::class        => fn() => new Config(
@@ -11,5 +10,5 @@ return [
     ),
     ConnectionFox::class => fn(Config $c) => new ConnectionFox(
         $c->get("db.source")
-    ),
+    )
 ];

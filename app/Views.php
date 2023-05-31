@@ -4,10 +4,17 @@ declare(strict_types=1);
 
 namespace App;
 
+use Psr\Http\Message\ServerRequestInterface;
+use Slim\Interfaces\RouteInterface;
+use Slim\Routing\RouteContext;
+use Slim\Routing\RouteParser;
 use Slim\Views\PhpRenderer;
 
 class Views extends PhpRenderer
 {
+    private ?RouteInterface $route    = null;
+    private ?RouteParser $routeParser = null;
+
     public function __construct(
         private Config $config
     ) {
@@ -53,5 +60,46 @@ class Views extends PhpRenderer
         }
 
         return $tags;
+    }
+
+    /**
+     * Setea a `route` y `routeParser`, importantes si se quieren generar
+     * links
+    */
+    public function setRouteContext(ServerRequestInterface $request):void
+    {
+        $context =  RouteContext::fromRequest($request);
+
+        $this->route = $context->getRoute();
+        $this->routeParser = $context->getRouteParser();
+    }
+
+    /**
+     * Genera el link para el nombre de una ruta
+    */
+    public function link(string $name): string
+    {
+        if (! isset($this->routeParser)) {
+            throw new \RuntimeException(
+                "No Route. You may have forgotten to use setRouteContext"
+            );
+        }
+
+        return $this->routeParser->urlFor($name);
+    }
+
+    /**
+     * Retorna TRUE o FALSE dependiendo si el nombre de la ruta corresponde
+     * al nombre de la ruta actual
+    */
+    public function isRoute(string $name): bool
+    {
+        if (! isset($this->routeParser)) {
+            throw new \RuntimeException(
+                "No Route. You may have forgotten to use setRouteContext"
+            );
+        }
+
+        return $this->route->getName() === $name;
     }
 }

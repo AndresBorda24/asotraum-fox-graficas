@@ -10,6 +10,8 @@ use App\Controllers\VentasController;
 function loadWebRoutes(App $app): void {
     $app->redirect("/", "/ventas");
 
-    $app->get("/ventas", [VentasController::class,"index"]);
-    $app->get("/ventas/grilla", [VentasController::class,"grilla"]);
+    $app->get("/ventas", [VentasController::class,"index"])
+        ->setName("ventas");
+    $app->get("/ventas/grilla", [VentasController::class,"grilla"])
+        ->setName("ventas.grilla");
 }
