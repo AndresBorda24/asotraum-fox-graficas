@@ -27,5 +27,9 @@ function loadApiRoutes(App $app): void {
             VentasController::class,
             "topFacturadores"
         ]);
+        $group->get("/excel", [
+            VentasController::class,
+            "excel"
+        ]);
     })->add(StartEndDatesMiddleware::class);
 }
