@@ -119,10 +119,8 @@ export default () => ({
     createChart() {
         const options = {
             series: [],
-            chart: {
-                type: 'bar',
-                height: 600
-            },
+            noData: { text: "No info..." },
+            chart: { type: 'bar', height: 600 },
             colors: this.colors,
             legend: { show: false },
             plotOptions: {

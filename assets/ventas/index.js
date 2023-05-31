@@ -6,6 +6,7 @@ import selectByMonth from "../partials/selectDates/select-by-month";
 // Componentes Especificos
 import rfTotales from "./partials/rf-totales";
 import topFacturadores from "./components/top-facturadores";
+import resumenxEntidad from "./components/resumen-x-entidad";
 import resumenFacturado from "./components/resumen-facturado";
 import facturacionGeneral from "./components/facturacion-general";
 
@@ -18,6 +19,7 @@ document.addEventListener("alpine:init", () => {
     Alpine.data("selectDates", selectDates);
     Alpine.data("selectByMonth", selectByMonth);
     Alpine.data("resumenFacturado", resumenFacturado);
+    Alpine.data("resumenxEntidad", resumenxEntidad);
     Alpine.data("resumenFacturadoTotales", rfTotales);
     Alpine.data("facturacionGeneral", facturacionGeneral);
     Alpine.data("topFacturadores", topFacturadores);

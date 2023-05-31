@@ -29,11 +29,8 @@ export default () => ({
      * Despacha el evento basado en un mes
     */
     byMonth(month) {
-        const ctrl  = new Date();
-        ctrl.setMonth(month);
-
-        const end   = new Date(ctrl.setDate(0));
-        const start = new Date(ctrl.setDate(1))
+        const start = new Date(this.currentYear, month, 1);
+        const end   = new Date(this.currentYear, month + 1, 0);
 
         this.sendEvent(start, end);
     },

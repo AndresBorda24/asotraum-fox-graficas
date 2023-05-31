@@ -19,6 +19,8 @@
   <hr>
   <?= $this->fetch("./ventas/components/resumen-facturado.php") ?>
   <hr>
+  <?= $this->fetch("./ventas/components/resumen-x-entidad.php") ?>
+  <hr>
   <?= $this->fetch("./ventas/components/top-facturadores.php") ?>
   <?= $this->fetch("./partials/loader.php") ?>
 </body>
