@@ -13,6 +13,7 @@
 </head>
 <body class="bg-body-tertiary">
   <?= $this->fetch("./partials/header.php") ?>
+  <?= $this->fetch("./ventas/partials/nav.php") ?>
 
   <!-- Graficas -->
   <?= $this->fetch("./ventas/components/facturacion-general.php") ?>

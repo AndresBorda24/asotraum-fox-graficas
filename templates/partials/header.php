@@ -9,7 +9,7 @@
   <nav class="container d-flex justify-content-center flex-wrap small gap-1">
     <a
     class="btn btn-sm btn-outline-dark rounded-0 rounded-bottom shadow-sm
-    <?= $this->isRoute("ventas") ? 'active' : '' ?>"
+    <?= ($this->isRoute("ventas") || $this->isRoute("ventas.grilla")) ? 'active' : '' ?>"
     href="<?= $this->link('ventas') ?>">Ventas</a>
   </nav>
 </header>

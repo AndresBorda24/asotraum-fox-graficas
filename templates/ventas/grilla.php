@@ -13,8 +13,9 @@
 </head>
 <body class="bg-body-tertiary">
   <?= $this->fetch("./partials/header.php") ?>
+  <?= $this->fetch("./ventas/partials/nav.php") ?>
 
-  <h1 class="text-center">Grilla Ventas</h1>
+  <h1 class="text-center mt-2">Ventas</h1>
 
   <div
   x-data="grilla"
