@@ -15,6 +15,7 @@ Encore
     // only needed for CDN's or sub-directory deploy
     //.setManifestKeyPrefix('build/')
     .addEntry('ventas/app', './assets/ventas/index.js')
+    .addEntry('ventas.grilla/app', './assets/ventas/grilla.js')
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     // .enableStimulusBridge('./assets/controllers.json')
