@@ -1,5 +1,6 @@
 import axios from 'axios';
 import ApexCharts from 'apexcharts';
+import formatter from "../../partials/money-formatter";
 import { showLoader, hideLoader } from "../../partials/loader";
 
 export default () => ({
@@ -7,18 +8,10 @@ export default () => ({
     years: [],
     chart: undefined,
     chartWrapper: "facturacion-general",
+    formatter: formatter,
     events: {
         ['@new-dates-range']: "updateChart($event.detail)"
     },
-    /**
-     * Esto nos ayuda a dar formato de moneda a algunos valores.
-    */
-    formatter: new Intl.NumberFormat('es-CO', {
-        style: 'currency',
-        currency: 'COP',
-        maximumFractionDigits: 0,
-        minimumFractionDigits: 0
-    }),
     /**
      * Aqui se guarda la informacion de la seccion al dar click
     */

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import ApexCharts from 'apexcharts';
+import formatter from "../../partials/money-formatter";
 import { showLoader, hideLoader } from "../../partials/loader";
 
 export default () => ({
@@ -8,13 +9,7 @@ export default () => ({
     // Grafica Principal
     chart: undefined,
     chartWrapper: "top-facturadores",
-    // Esto nos permite imprimir el total en pesos $ xxx.xxx.xxx
-    formatter: new Intl.NumberFormat('es-CO', {
-        style: 'currency',
-        currency: 'COP',
-        maximumFractionDigits: 0,
-        minimumFractionDigits: 0
-    }),
+    formatter: formatter,
     /**
      * Estos son los colores que tomaran las columnas
      * Se hizo de esta forma para evitar duplicados.
