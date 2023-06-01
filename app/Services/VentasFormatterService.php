@@ -116,6 +116,97 @@ class VentasFormatterService
     }
 
     /**
+     * Da formato a la consulta de top facturadores
+    */
+    public function topFacturadores(\PDOStatement $data): void
+    {
+        $ctrl = [];
+
+        while (($reg = $data->fetch()) && count($ctrl) <= 15) {
+            array_push($ctrl, [
+                "id"    => trimUtf8($reg->quien),
+                "quien" => trimUtf8($reg->nombre),
+                "cuanto" => (int) $reg->total
+            ]);
+        }
+
+        $this->schema["data"] = $ctrl;
+    }
+
+    /**
+     * Establece el esquema para la informacion de los facturadores
+    */
+    public function setTopFacturadoresSchema(string $start, string $end): void
+    {
+        $year  = substr($start, 6);
+
+        $this->schema = [
+            "data" => [],
+            "meta" => [
+                "dates" => [
+                    "start" => $start,
+                    "end"   => $end,
+                    "year"  => $year
+                ]
+            ]
+        ];
+    }
+
+    /**
+     * Organiza la informacion para la grilla.
+    */
+    public function grilla(\PDOStatement $data): void
+    {
+        $ctrl = [];
+
+        while ($reg = $data->fetch()) {
+            $fech_rad = trimUtf8($reg->fech_rad);
+
+            array_push($ctrl, [
+                trimUtf8($reg->tercero),
+                trimUtf8($reg->nombre_t),
+                trimUtf8($reg->nombre_q),
+                trimUtf8($reg->fecha),
+                ($fech_rad === '1899-12-30') ? null : $fech_rad,
+                trimUtf8($reg->radicacion),
+                "$ " . number_format((int) $reg->total),
+                trimUtf8($reg->observac)
+            ]);
+        }
+
+        $this->schema["data"] = $ctrl;
+    }
+
+    /**
+     * Esquema para la informacion de la grilla
+    */
+    public function setGrillaSchema(string $start, string $end): void
+    {
+        $year  = substr($start, 6);
+
+        $this->schema = [
+            "data" => [],
+            "meta" => [
+                "columns" => [
+                    "Tercero",
+                    "Nom.Tercero",
+                    "Quien",
+                    "Fecha",
+                    "Fecha.Rad",
+                    "Radicacion",
+                    "Valor Factura",
+                    "Observacion",
+                ],
+                "dates" => [
+                    "start" => $start,
+                    "end"   => $end,
+                    "year"  => $year
+                ]
+            ]
+        ];
+    }
+
+    /**
      * Retorna el array formateado con la informacion de las  queries.
      */
     public function getData(): array

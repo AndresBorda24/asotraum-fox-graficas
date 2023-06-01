@@ -13,7 +13,6 @@ use App\Services\VentasFormatterService as VtFormatter;
 use App\Services\VentasResumenPorEntidadService;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-use function App\trimUtf8;
 use function App\responseJson;
 
 /**
@@ -63,8 +62,10 @@ class VentasController
         return responseJson($response, $fmt->getData());
     }
 
-    public function resumenGeneral(Request $request, Response $response): Response
-    {
+    public function resumenGeneral(
+        Request $request,
+        Response $response
+    ):  Response {
         // Fechas para consultas de fox (las toma del middleware)
         $start = $request->getAttribute("start");
         $end   = $request->getAttribute("end");
@@ -139,12 +140,17 @@ class VentasController
         return responseJson($response, $fmt->getData());
     }
 
-    public function topFacturadores(Request $request, Response $response): Response
-    {
+    public function topFacturadores(
+        Request $request,
+        Response $response
+    ):  Response {
         // Fechas para consultas de fox (las toma del middleware)
         $start = $request->getAttribute("start");
         $end   = $request->getAttribute("end");
         $year  = substr($start, 6);
+
+        $fm = new VtFormatter;
+        $fm->setTopFacturadoresSchema($start, $end);
 
         $data = $this->conn->query("
             SELECT V.quien, M.nombre, (
@@ -162,26 +168,9 @@ class VentasController
             GROUP BY quien
         ");
 
-        $formatted = [
-            "data" => [],
-            "meta" => [
-                "dates" => [
-                    "start" => $start,
-                    "end"   => $end,
-                    "year"  => $year
-                ]
-            ]
-        ];
+        $fm->topFacturadores($data);
 
-        while (($reg = $data->fetch()) && count($formatted["data"]) <= 15) {
-            array_push($formatted["data"], [
-                "id"    => trimUtf8($reg->quien),
-                "quien" => trimUtf8($reg->nombre),
-                "cuanto" => (int) $reg->total
-            ]);
-        }
-
-        return responseJson($response, $formatted);
+        return responseJson($response, $fm->getData());
     }
 
     public function grilla(Request $request, Response $response): Response
@@ -190,6 +179,9 @@ class VentasController
         $start = $request->getAttribute("start");
         $end   = $request->getAttribute("end");
         $year  = substr($start, 6);
+
+        $fm = new VtFormatter;
+        $fm->setGrillaSchema($start, $end);
 
         $data = $this->conn->query("
             SELECT
@@ -210,43 +202,9 @@ class VentasController
             ORDER BY V.fecha
         ");
 
-        $formatted = [
-            "data" => [],
-            "meta" => [
-                "columns" => [
-                    "Tercero",
-                    "Nom.Tercero",
-                    "Quien",
-                    "Fecha",
-                    "Fecha.Rad",
-                    "Radicacion",
-                    "Valor Factura",
-                    "Observacion",
-                ],
-                "dates" => [
-                    "start" => $start,
-                    "end"   => $end,
-                    "year"  => $year
-                ]
-            ]
-        ];
+        $fm->grilla($data);
 
-        while ($reg = $data->fetch()) {
-            $fech_rad = trimUtf8($reg->fech_rad);
-
-            array_push($formatted["data"], [
-                trimUtf8($reg->tercero),
-                trimUtf8($reg->nombre_t),
-                trimUtf8($reg->nombre_q),
-                trimUtf8($reg->fecha),
-                ($fech_rad === '1899-12-30') ? null : $fech_rad,
-                trimUtf8($reg->radicacion),
-                "$ " . number_format((int) $reg->total),
-                trimUtf8($reg->observac)
-            ]);
-        }
-
-        return responseJson($response, $formatted);
+        return responseJson($response, $fm->getData());
     }
 
     public function resumenPorEntidad(Request $request, Response $response)
@@ -288,11 +246,18 @@ class VentasController
         $fh = fopen($path, 'rb');
         $file_stream = new Stream($fh);
 
-        $response = $response->withBody($file_stream)
-            ->withHeader('Content-Disposition', 'attachment; filename=' . $name . ';')
-            ->withHeader('Content-Type', "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-            ->withHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
-            ->withHeader('Cache-Control', 'post-check=0, pre-check=0')
+        $response = $response
+            ->withBody($file_stream)
+            ->withHeader(
+                'Content-Disposition',
+                'attachment; filename=' . $name . ';'
+            )->withHeader(
+                'Content-Type',
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            )->withHeader(
+                'Cache-Control',
+                'no-store, no-cache, must-revalidate, max-age=0'
+            )->withHeader('Cache-Control', 'post-check=0, pre-check=0')
             ->withHeader('Pragma', 'no-cache')
             ->withHeader('Content-Length', filesize($path));
 
