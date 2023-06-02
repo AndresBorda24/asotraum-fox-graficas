@@ -102,4 +102,12 @@ class Views extends PhpRenderer
 
         return $this->route->getName() === $name;
     }
+
+    /**
+     * Devuelve la ruta `absoluta` para un archivo $asset
+    */
+    public function asset(string $asset): string
+    {
+        return $this->config->get("app.url") . $asset;
+    }
 }

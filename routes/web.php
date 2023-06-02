@@ -8,7 +8,7 @@ use App\Controllers\VentasController;
  * Carga las rutas web de la Aplicacion
 */
 function loadWebRoutes(App $app): void {
-    $app->redirect("/", "/ventas");
+    $app->redirect("/", $app->getBasePath() . "/ventas");
 
     $app->get("/ventas", [VentasController::class,"index"])
         ->setName("ventas");

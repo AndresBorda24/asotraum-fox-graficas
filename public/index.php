@@ -27,6 +27,8 @@ $app = Bridge::create($container);
 $app->addRoutingMiddleware();
 $errorMiddleware = $app->addErrorMiddleware(true, false, false);
 
+$app->setBasePath($_ENV["APP_PATH"]);
+
 /**
  * Rutas de la aplicacion
 */
