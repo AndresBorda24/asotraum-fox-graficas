@@ -11,7 +11,12 @@ export default () => ({
     excelUrl: process.env.API + "/ventas/excel",
     endPoint: process.env.API + "/ventas/grilla",
     datatable: new DataTable("#datatable", {
-        aaSorting: [3, "asc"]
+        scrollY: '45vh',
+        pageLength: 50,
+        aaSorting: [3, "asc"],
+        columnDefs: [
+            { target: -1, width: '200px' }
+        ]
     }),
     events: {
         ['@new-dates-range']: "getData($event.detail.start, $event.detail.end)"
@@ -22,7 +27,7 @@ export default () => ({
     async init() {
         jQuery( this.datatable.table().container() )
             .addClass("mt-4");
-        await this.getData();
+        // await this.getData();
     },
     /** Realiza la peticion al API */
     async getData(start = null, end = null) {

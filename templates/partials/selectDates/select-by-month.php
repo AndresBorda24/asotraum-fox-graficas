@@ -6,17 +6,20 @@
       style="font-size: .65rem;"
       x-text="'Trim.' + _"
       @click="byTrimestre(_ - 1)"
-      class="btn btn-sm flex-grow-1 border rounded-0"></button>
+      :class="{ 'active': isSelected('T', _) }"
+      class="btn btn-sm btn-outline-primary flex-grow-1"></button>
     </template>
   </div>
 
   <!-- Mensual -->
-  <div class="d-flex w-100 flex-wrap">
+  <div class="d-flex w-100 flex-wrap my-1">
     <template x-for="(month, index) in months" :key="index">
       <button
       @click="byMonth( index )"
       x-text="month"
-      class="btn btn-sm col-sm-1 col-2" style="font-size: .65rem;">
+      :class="{ 'active': isSelected('M', index + 1) }"
+      class="btn btn-sm btn-outline-primary border-0 col-sm-1 col-2"
+      style="font-size: .65rem;">
       </button>
     </template>
   </div>
@@ -28,7 +31,8 @@
       style="font-size: .65rem;"
       x-text="'Sem. ' + _"
       @click="bySemestre(_ - 1)"
-      class="btn btn-sm flex-grow-1 border rounded-0"></button>
+      :class="{ 'active': isSelected('S', _) }"
+      class="btn btn-sm btn-outline-primary flex-grow-1"></button>
     </template>
   </div>
 </div>

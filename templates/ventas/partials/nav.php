@@ -1,4 +1,4 @@
-<nav class="d-flex justify-content-center gap-2">
+<nav class="d-flex justify-content-center gap-2 mb-3">
   <a
   class="btn btn-sm btn-outline-dark
   <?= $this->isRoute("ventas") ? 'active' : '' ?>"
