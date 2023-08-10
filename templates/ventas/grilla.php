@@ -15,8 +15,6 @@
   <?= $this->fetch("./partials/header.php") ?>
   <?= $this->fetch("./ventas/partials/nav.php") ?>
 
-  <h1 class="text-center mt-2">Ventas</h1>
-
   <div
   x-data="grilla"
   x-bind="events"
@@ -25,7 +23,7 @@
     <a
     :href="excelUrl"
     target="_blank"
-    class="btn btn-success mt-3">Exportar a Excel</a>
+    class="btn btn-sm btn-success mt-3">Exportar a Excel</a>
     <table id="datatable" class="display shadow compact small">
       <thead>
         <tr>
@@ -39,7 +37,6 @@
           <th>Observaci&oacute;n</th>
         </tr>
       </thead>
-
     </table>
   </div>
   <?= $this->fetch("./partials/loader.php") ?>
