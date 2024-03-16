@@ -1,7 +1,7 @@
 import axios from 'axios';
 import ApexCharts from 'apexcharts';
 import formatter from "../../partials/money-formatter";
-import { showLoader, hideLoader } from "../../partials/loader";
+import { createLoader, removeLoader } from "../../partials/loader";
 
 export default () => ({
     data: {},
@@ -22,10 +22,10 @@ export default () => ({
     */
     async getData({ start, end }) {
         try {
-            showLoader();
+            createLoader(`#${this.wrapper}-container`);
             const { data } = await axios
                 .get(`${this.endPoint}?start=${start}&end=${end}`)
-                .finally(hideLoader);
+                .finally(() => removeLoader(`#${this.wrapper}-container`));
             this.data = data;
             this.updateChart();
         } catch (e) {

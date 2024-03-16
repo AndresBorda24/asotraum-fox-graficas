@@ -1,7 +1,7 @@
 import axios from 'axios';
 import ApexCharts from 'apexcharts';
 import formatter from "../../partials/money-formatter";
-import { showLoader, hideLoader } from "../../partials/loader";
+import { createLoader, removeLoader } from "../../partials/loader";
 
 export default () => ({
     data: [],
@@ -39,7 +39,7 @@ export default () => ({
         /**
          * Consultamos la base de datos
         */
-        showLoader();
+        createLoader(`#${this.chartWrapper}-container`);
         const res = await Promise.all(
             this.years.map(y => {
                 const s = start.replace(/\w+/, y);
@@ -48,7 +48,7 @@ export default () => ({
                 return this.getData(s, e);
             })
         );
-        hideLoader();
+        removeLoader(`#${this.chartWrapper}-container`);
 
         this.data = res.reduce((acc, data) => {
             if (typeof data === 'undefined') return acc;
