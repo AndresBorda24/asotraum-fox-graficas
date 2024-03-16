@@ -1,4 +1,8 @@
 export default () => ({
+    events: {
+        ["@update-selects-dates.document"]: "updateSelected"
+    },
+
     /** Esto es para mostrar los meses en spanish */
     months: [
         'Ene',
@@ -29,13 +33,24 @@ export default () => ({
     },
 
     /**
+     * Al momento de seleccionar una fecha an cualquiera de las graficas, 
+     * actualiza la propiedad `selected` en todos los componentes.
+     */
+    updateSelected({ detail }) {
+        this.selected = detail.selected
+    },
+
+    /**
      * Despacha el evento de actualizacion de los selects de las fechas de
      * inicio y final
     */
     sendEvent(start, end) {
+        const selected = JSON.parse(JSON.stringify(this.selected));
+
         this.$dispatch("update-selects-dates", {
             start,
-            end
+            end, 
+            selected    
         });
     },
     /**

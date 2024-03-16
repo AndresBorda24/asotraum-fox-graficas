@@ -1,4 +1,4 @@
-<div x-data="selectByMonth" class="mt-1 w-100">
+<div x-data="selectByMonth" x-bind="events" class="mt-1 w-100">
   <!-- Trimestres  -->
   <div class="d-flex w-100 gap-1">
     <template x-for="_ in 4">
