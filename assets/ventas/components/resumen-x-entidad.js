@@ -10,7 +10,7 @@ export default () => ({
     wrapper: "resumen-x-entidad",
     endPoint: process.env.API + "/ventas/resumen-x-entidad",
     events: {
-        ['@new-dates-range']: "getData($event.detail)"
+        ['@new-dates-range.document']: "getData($event.detail)"
     },
     formatter: formatter,
     init() {

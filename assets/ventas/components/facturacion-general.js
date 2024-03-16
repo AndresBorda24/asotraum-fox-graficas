@@ -10,7 +10,7 @@ export default () => ({
     chartWrapper: "facturacion-general",
     formatter: formatter,
     events: {
-        ['@new-dates-range']: "updateChart($event.detail)"
+        ['@new-dates-range.document']: "updateChart($event.detail)"
     },
     /**
      * Aqui se guarda la informacion de la seccion al dar click

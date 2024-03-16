@@ -37,7 +37,7 @@ export default () => ({
         "#000000"
     ],
     events: {
-        ['@new-dates-range']: "updateChart($event.detail)"
+        ['@new-dates-range.document']: "updateChart($event.detail)"
     },
     async init() {
         /**
