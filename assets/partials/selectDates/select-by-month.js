@@ -25,13 +25,6 @@ export default () => ({
     */
     selected: [ "", 0 ],
 
-    init() {
-        const x = new Date;
-        x.setDate(0);
-
-        this.byMonth(x.getMonth());
-    },
-
     /**
      * Al momento de seleccionar una fecha an cualquiera de las graficas, 
      * actualiza la propiedad `selected` en todos los componentes.

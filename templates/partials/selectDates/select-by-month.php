@@ -17,7 +17,7 @@
       <button
       @click="byMonth( index )"
       x-text="month"
-      :class="{ 'active': isSelected('M', index + 1) }"
+      :class="{ 'active': isSelected('M', index + 1), [`month-${index}`]: true }"
       class="btn btn-sm btn-outline-primary border-0 col-sm-1 col-2"
       style="font-size: .65rem;">
       </button>
