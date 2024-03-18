@@ -29,7 +29,7 @@ class VentasController
 
         return $this->views->render($response, "ventas/grilla.php", [
             "__title" => "Estadísticas Ventas - Grilla",
-            "__asset" => "assets/ventas/index.js"
+            "__asset" => "assets/ventas/grilla.js"
         ]);
     }
 }

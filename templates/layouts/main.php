@@ -18,7 +18,7 @@
   <?= $content ?>
 
   <?php if ($_ENV["APP_ENV"] == "dev"): ?>
-    <script type="module" src="http://localhost:5173/@vite/client"></script>
+    <script type="module" src="http://localhost:5173/graficas/build/@vite/client"></script>
     <script type="module" src="http://localhost:5173/graficas/build/<?= $__asset ?>"></script>
   <?php else: ?>
     <?= $this->loadAssets($__asset) ?>

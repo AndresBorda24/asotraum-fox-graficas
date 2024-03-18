@@ -8,7 +8,7 @@ export default () => ({
     year: new Date().getFullYear(),
     chart: undefined,
     wrapper: "resumen-x-entidad",
-    endPoint: process.env.API + "/ventas/resumen-x-entidad",
+    endPoint: import.meta.env.VITE_API + "/ventas/resumen-x-entidad",
     events: {
         ['@new-dates-range.document']: "getData($event.detail)"
     },

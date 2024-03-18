@@ -34,7 +34,7 @@ export function createLoader(parent = 'body') {
         LOADER.className = "loader-created h-100 w-100 position-absolute bg-black bg-opacity-75 flex top-0 start-0";
         LOADER.style.zIndex = 3000;
         LOADER.innerHTML = `<div class="m-auto text-center">
-            <img src="${process.env.APP_PATH}/img/aso-loader.png" alt="loader" width="50">
+            <img src="${import.meta.env.VITE_APP_BASE}/img/aso-loader.png" alt="loader" width="50">
             <span class="text-light d-block">Cargando...</span>
         </div>`;
     }

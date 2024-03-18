@@ -52,7 +52,7 @@ export default () => ({
     */
     async getData(start, end) {
         try {
-            const API = process.env.API + "/ventas/top-facturadores";
+            const API = import.meta.env.VITE_API + "/ventas/top-facturadores";
             return axios
                 .get(`${API}?start=${start}&end=${end}`)
                 .catch(error => console.error("Axios Handler: ", error));
