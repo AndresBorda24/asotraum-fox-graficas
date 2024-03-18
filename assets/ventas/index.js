@@ -29,6 +29,7 @@ document.addEventListener("alpine:init", () => {
 document.addEventListener("alpine:initialized", () => {
     // Desde aqui se realiza la primera carga de las graficas.
     const x = new Date;
+    x.setDate(0)
     document.querySelector(`.month-${x.getMonth()}`)?.click();
 })
 
