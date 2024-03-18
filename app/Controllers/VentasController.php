@@ -17,13 +17,19 @@ class VentasController
     {
         $this->views->setRouteContext($request);
 
-        return $this->views->render($response, "ventas/index.php");
+        return $this->views->render($response, "ventas/index.php", [
+            "__title" => "Estadísticas Ventas - Gráficas",
+            "__asset" => "assets/ventas/index.js"
+        ]);
     }
 
     public function grilla(Request $request, Response $response): Response
     {
         $this->views->setRouteContext($request);
 
-        return $this->views->render($response, "ventas/grilla.php");
+        return $this->views->render($response, "ventas/grilla.php", [
+            "__title" => "Estadísticas Ventas - Grilla",
+            "__asset" => "assets/ventas/index.js"
+        ]);
     }
 }
