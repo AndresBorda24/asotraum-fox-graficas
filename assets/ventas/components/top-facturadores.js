@@ -1,7 +1,7 @@
 import axios from 'axios';
 import ApexCharts from 'apexcharts';
 import formatter from "../../partials/money-formatter";
-import { showLoader, hideLoader } from "../../partials/loader";
+import { createLoader, removeLoader } from "../../partials/loader";
 
 export default () => ({
     data: {},
@@ -37,7 +37,7 @@ export default () => ({
         "#000000"
     ],
     events: {
-        ['@new-dates-range']: "updateChart($event.detail)"
+        ['@new-dates-range.document']: "updateChart($event.detail)"
     },
     async init() {
         /**
@@ -65,7 +65,7 @@ export default () => ({
      * Handler del evento de actualizacion de fechas
     */
     async updateChart({ start, end }) {
-        showLoader();
+        createLoader(`#${this.chartWrapper}-container`);
         const res = await Promise.all(
             this.years.map(y => {
                 const s = start.replace(/\w+/, y);
@@ -73,7 +73,7 @@ export default () => ({
 
                 return this.getData(s, e);
             })
-        ).finally(hideLoader);
+        ).finally(() => removeLoader(`#${this.chartWrapper}-container`));
 
         this.data = res.map(r => r.data);
 

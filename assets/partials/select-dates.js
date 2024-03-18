@@ -2,7 +2,8 @@ export default () => ({
     dateStart: undefined,
     dateEnd: undefined,
     events: {
-        ["@update-selects-dates"]: "updateDates($event.detail)"
+        ["@update-selects-dates"]: "updateDates($event.detail)",
+        ["@new-dates-range.document"]: "updateDates2($event.detail)"
     },
     init() {
         const [x, y] = this.getDates();
@@ -59,6 +60,15 @@ export default () => ({
         this.dateEnd   = this.getStringDate( new Date(end) );
         this.dateStart = this.getStringDate( new Date(start) );
         this.sendEvent();
+    },
+    /**
+     * Actualiza las fechas de los selects a partir del evento
+     * `update-selects-dates`
+    */
+   updateDates2({ start, end }) {
+       this.dateEnd   = this.getStringDate( new Date(end) );
+       this.dateStart = this.getStringDate( new Date(start) );
+       console.log(this.getDates())
     },
     /**
      * Texto que dice el rango de las fechas

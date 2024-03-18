@@ -1,4 +1,4 @@
-<div x-data="selectByMonth" class="mt-1 w-100">
+<div x-data="selectByMonth" x-bind="events" class="mt-1 w-100">
   <!-- Trimestres  -->
   <div class="d-flex w-100 gap-1">
     <template x-for="_ in 4">
@@ -17,7 +17,7 @@
       <button
       @click="byMonth( index )"
       x-text="month"
-      :class="{ 'active': isSelected('M', index + 1) }"
+      :class="{ 'active': isSelected('M', index + 1), [`month-${index}`]: true }"
       class="btn btn-sm btn-outline-primary border-0 col-sm-1 col-2"
       style="font-size: .65rem;">
       </button>

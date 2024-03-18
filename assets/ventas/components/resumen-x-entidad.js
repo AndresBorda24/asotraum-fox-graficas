@@ -1,7 +1,7 @@
 import axios from 'axios';
 import ApexCharts from 'apexcharts';
 import formatter from "../../partials/money-formatter";
-import { showLoader, hideLoader } from "../../partials/loader";
+import { createLoader, removeLoader } from "../../partials/loader";
 
 export default () => ({
     data: {},
@@ -10,7 +10,7 @@ export default () => ({
     wrapper: "resumen-x-entidad",
     endPoint: process.env.API + "/ventas/resumen-x-entidad",
     events: {
-        ['@new-dates-range']: "getData($event.detail)"
+        ['@new-dates-range.document']: "getData($event.detail)"
     },
     formatter: formatter,
     init() {
@@ -22,10 +22,10 @@ export default () => ({
     */
     async getData({ start, end }) {
         try {
-            showLoader();
+            createLoader(`#${this.wrapper}-container`);
             const { data } = await axios
                 .get(`${this.endPoint}?start=${start}&end=${end}`)
-                .finally(hideLoader);
+                .finally(() => removeLoader(`#${this.wrapper}-container`));
             this.data = data;
             this.updateChart();
         } catch (e) {
