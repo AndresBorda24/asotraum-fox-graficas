@@ -16,7 +16,7 @@ class HomeController
     public function __invoke(Request $request, Response $response): Response 
     {
         $this->views->setRouteContext($request);
-        return $this->views->render($response, "home.php", [
+        return $this->views->render($response, "home/index.php", [
             "__asset" => "assets/home/index.js",
             "__title" => "Estadísticas - Asotrauma"
         ]); 
