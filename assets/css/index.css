@@ -1,12 +1,62 @@
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap');
+@import "./bootstrap.min.css";
 
-body {
-    font-family: 'Source Sans Pro', sans-serif;
-}
-.flex {
-    display: flex;
+:root {
+    --bs-primary: #077E9D;
+    --bs-primary-rgb: 7,126,157;
+    --bs-secondary: #025B7D;
+    --bs-secondary-rgb: 2,91,125;
+    --bs-warning: #FCBB1C;
+    --bs-warning-rgb: 252,187,28;
+    /* Azules para uso en cositas */
+    --blue-50: #e4f0f6;
+    --blue-100: #bcd9ea;
+    --blue-200: #8bbdd9;
+    --blue-300: #5ba4cf;
+    --blue-400: #298fca;
+    --blue-500: #0079bf;
+    --blue-600: #026aa7;
+    --blue-700: #055a8c;
+    --blue-800: #094c72;
+    --blue-900: #0c3953;
+    /* Estados de requisicion */
+    --req-solicitud: #FEF6FB;
+    --req-solicitud-rgb: 254,246,251;
+    --req-revision: #F8B195;
+    --req-revision-rgb: 248,177,149;
+    --req-aprobado: #17B978;
+    --req-aprobado-rgb: 23,185,120;
+    --req-anulado: #c92626;
+    --req-anulado-rgb: 201,38,38;
+    --req-cerrado: #1597BB;
+    --req-cerrado-rgb: 21,151,187;
+    --req-pendiente: #E8630A;
+    --req-pendiente-rgb: 232,99,10;
 }
 
+.bg {
+    background-color: #fff;
+    background-image: radial-gradient(#025b7d 0.5px, transparent 0);
+    background-size: 29px 29px;
+}
+.flex { display: flex; }
+[x-cloak]{display: none !important}
+body { font-family: 'Source Sans Pro', sans-serif; }
+.bg-blue-50 { background-color: #e4f0f6 !important}
+.bg-blue-100{ background-color: #bcd9ea !important}
+.bg-blue-200{ background-color: #8bbdd9 !important}
+.bg-blue-300{ background-color: #5ba4cf !important}
+.bg-blue-400{ background-color: #298fca !important}
+.bg-blue-500{ background-color: #0079bf !important}
+.bg-blue-600{ background-color: #026aa7 !important}
+.bg-blue-700{ background-color: #055a8c !important}
+.bg-blue-800{ background-color: #094c72 !important}
+.bg-blue-900{ background-color: #0c3953 !important}
+
+.text-bg-primary {
+    color: #fff!important;
+    background-color: RGBA(var(--bs-primary-rgb),var(--bs-bg-opacity,1))!important;
+}
 .closable-button {
     position: relative;
 }

@@ -15,7 +15,8 @@ export default defineConfig(({ mode }) => {
       laravel({
         input: [
             "assets/ventas/index.js",
-            "assets/ventas/grilla.js"
+            "assets/ventas/grilla.js",
+            "assets/home/index.js"
         ],
       }),
     ],
