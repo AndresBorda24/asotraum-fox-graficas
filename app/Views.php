@@ -19,6 +19,7 @@ class Views extends PhpRenderer
         private Config $config
     ) {
         parent::__construct( $this->config->get('assets.templates') );
+        $this->setLayout("layouts/main.php");
     }
 
     /**
@@ -28,7 +29,7 @@ class Views extends PhpRenderer
      *
      * @param string $name El nombre de la carpeta donde estan los archivos en public/build
     */
-    public function loadAssets(string $name): string
+    public function loadAssets(string $name, bool $isCss = false): string
     {
         /* Ruta del archivo entrypoints.json */
         $_  = file_get_contents($this->config->get('assets.entrypoints'));
@@ -41,22 +42,18 @@ class Views extends PhpRenderer
          * En el archivo de entrypoints esta folder(name)/app para
          * identificar los archivos de cada vista.
         */
-        $k = $name . "/app";
-        if (!array_key_exists($k, $ep["entrypoints"])) return "";
+        if (!array_key_exists($name, $ep)) return "";
 
-        /**
-         * Tags `script` y `link`
-        */
+        
+        /** Tags `script` y `link` */
         $tags = "";
 
-        foreach ($ep["entrypoints"][$k] as $type => $assets) {
-            foreach ($assets as $asset) {
-                $tags .= match ($type) {
-                    'js'  => "<script src=\"$asset\" type=\"text/javascript\"></script>",
-                    'css' => "<link rel=\"stylesheet\" type=\"text/css\" href=\"$asset\">",
-                    default => ""
-                };
+        if ($isCss) {
+            foreach ($ep[$name]["css"] as $file) {
+                $tags .= "<link rel=\"stylesheet\" type=\"text/css\" href=\"$file\"> \n";
             }
+        } else {
+            $tags .= "<script src=\"$ep[$name][file]\" type=\"module\"></script>";
         }
 
         return $tags;

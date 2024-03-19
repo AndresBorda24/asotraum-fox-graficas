@@ -8,8 +8,8 @@ export default () => ({
     // Aqui se almaciena la info en cada solicitus.
     data: {},
     // Url de donde se descarga el excel
-    excelUrl: process.env.API + "/ventas/excel",
-    endPoint: process.env.API + "/ventas/grilla",
+    excelUrl: import.meta.env.VITE_API + "/ventas/excel",
+    endPoint: import.meta.env.VITE_API + "/ventas/grilla",
     datatable: new DataTable("#datatable", {
         scrollY: '45vh',
         pageLength: 50,
