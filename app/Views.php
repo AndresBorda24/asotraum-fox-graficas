@@ -29,7 +29,7 @@ class Views extends PhpRenderer
      *
      * @param string $name El nombre de la carpeta donde estan los archivos en public/build
     */
-    public function loadAssets(string $name, bool $isCss = false): string
+    public function loadAssets(string $name): string
     {
         /* Ruta del archivo entrypoints.json */
         $_  = file_get_contents($this->config->get('assets.entrypoints'));
@@ -44,16 +44,24 @@ class Views extends PhpRenderer
         */
         if (!array_key_exists($name, $ep)) return "";
 
-        
-        /** Tags `script` y `link` */
-        $tags = "";
+        /** Cargamos el archivo js principal */
+        $tags = "<script src=\"/graficas/build/".$ep[$name]['file']."\" type=\"module\"></script>\n";
 
-        if ($isCss) {
-            foreach ($ep[$name]["css"] as $file) {
-                $tags .= "<link rel=\"stylesheet\" type=\"text/css\" href=\"$file\"> \n";
+        $loadCss = function(array $cssFiles) use(&$tags) {
+            foreach ($cssFiles as $file) {
+                $tags .= "<link rel=\"stylesheet\" type=\"text/css\" href=\"/graficas/build/$file\"> \n";
             }
-        } else {
-            $tags .= "<script src=\"$ep[$name][file]\" type=\"module\"></script>";
+        };
+
+        /* Cargamos el CSS especifico para esa entrada */
+        if (array_key_exists("css", $ep[$name])) $loadCss($ep[$name]["css"]);
+
+        /* Cargamos el CSS de los archivos js que se */
+        if (array_key_exists("imports", $ep[$name])) {
+            $imp = $ep[$name]["imports"];
+            foreach ($imp as $file) {
+                if (array_key_exists("css", $ep[$file])) $loadCss($ep[$file]["css"]);
+            }
         }
 
         return $tags;

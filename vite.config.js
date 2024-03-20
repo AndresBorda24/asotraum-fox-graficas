@@ -1,16 +1,13 @@
-import { fileURLToPath, URL } from 'node:url'
-
 import laravel from 'laravel-vite-plugin'
 import { defineConfig, loadEnv } from 'vite'
+import { fileURLToPath, URL } from 'node:url'
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd())
 
   return {
-    base: Boolean(env.VITE_APP_BASE)
-      ? `${env.VITE_APP_BASE}/build`
-      : undefined,
+    base: `/graficas/build`,
     plugins: [
       laravel({
         input: [
