@@ -15,8 +15,7 @@ document.addEventListener('alpine:init', () => {
         init() {
             // Aqui inicializamos las graficas con las fechas del ultimo mes
             const de = new Date();
-            de.setDate(0);
-            const ds = new Date( de.getTime() );
+            const ds = new Date();
             ds.setDate(1);
             this.$dispatch("new-dates-range", {
                 start: ds.toJSON().substring(0, 10),

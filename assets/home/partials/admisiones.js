@@ -38,7 +38,6 @@ export default () => ({
         const res = await this.getData();
         removeLoader(`#${this.chartWrapper}-container`);
 
-        console.log(res);
         this.data = res.data
         this.updateChartSeries();
     },
@@ -102,7 +101,7 @@ export default () => ({
                 width: 2,
                 colors: ['transparent']
             },
-            series: [] 
+            series: []
         }
 
         this.chart = new ApexCharts(
