@@ -51,32 +51,17 @@ export default () => ({
             strokeHeight: 5,
             strokeColor: '#FCBB1C'
         };
-
         this.chart.updateOptions({
-            series: [{
-                name: this.data[0].fecha,
-                data: [{
-                    x: "Hospitalarios",
-                    y: this.data[0].hospita,
-                    goals: [goal]
-                },{
-                    x: "Ambulatorios",
-                    y: this.data[0].ambula,
-                    goals: [goal]
-                },{
-                    x: "Urgencias",
-                    y: this.data[0].urgencia,
-                    goals: [goal]
-                }]
-            }],
-            legend: {
-                show: true,
-                showForSingleSeries: true,
-                customLegendItems: ['Tipo Atención', `Total Admisiones ${this.data[0].total}`],
-                markers: {
-                    fillColors: ['#269ffb', '#FCBB1C']
-                }
-            }
+            series: [
+                this.data[0].hospita,
+                this.data[0].ambula,
+                this.data[0].urgencia
+            ],
+            labels: [
+                `Hospitalarios: ${this.data[0].hospita}`,
+                `Ambulatorios: ${this.data[0].ambula}`,
+                `Urgencias: ${this.data[0].urgencia}`
+            ],
         });
     },
     /**
@@ -85,21 +70,11 @@ export default () => ({
     createChart() {
         const options = {
             chart: {
-                type: 'bar',
+                type: 'pie',
                 height: 350
             },
             noData: {
                 text: "No info..."
-            },
-            yaxis: {
-                title: {
-                    text: "N° Admisiones"
-                }
-            },
-            stroke: {
-                show: true,
-                width: 2,
-                colors: ['transparent']
             },
             series: []
         }
