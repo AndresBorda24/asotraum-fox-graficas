@@ -11,3 +11,7 @@
         box-shadow: -15px 15px 0px 4px rgb(123 123 123 / 20%);
     }
 }
+
+#general-summary {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
