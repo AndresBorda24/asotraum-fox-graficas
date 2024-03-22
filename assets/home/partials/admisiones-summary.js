@@ -20,6 +20,7 @@ export default () => ({
         this.updateChart();
 
         this.$watch("zoom", (val) => {
+            // Activa / Desactiva el zoom en mobile
             this.chart.updateOptions({
                 responsive: [{
                     breakpoint: 768,
@@ -62,7 +63,7 @@ export default () => ({
      * Actualiza las series y las categorias del grafico
     */
     updateChartSeries() {
-        const series = Object.keys(this.data.data).map(key => {
+        const series = Object.keys(this.data.data).reverse().map(key => {
             return {
                 "name": key,
                 data: Object.values(this.data.data[key])
