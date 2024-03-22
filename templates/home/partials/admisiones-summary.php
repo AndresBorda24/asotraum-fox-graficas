@@ -29,6 +29,10 @@
               </li>
             </template>
           </ul>
+          <div class="form-check d-block d-md-none">
+            <input class="form-check-input" type="checkbox" x-model="zoom" id="habilitar-zoom">
+            <label class="form-check-label" for="habilitar-zoom"> Habilitar Zoom </label>
+          </div>
         </div>
       </template>
     </div>

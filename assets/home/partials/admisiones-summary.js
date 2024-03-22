@@ -5,6 +5,7 @@ import { createLoader, removeLoader } from "../../partials/loader";
 export default () => ({
     days: 3,
     data: {},
+    zoom: false,
     chart: undefined,
     chartWrapper: "admisiones-summary",
     /**
@@ -17,6 +18,21 @@ export default () => ({
         this.createChart();
         this.chart.render();
         this.updateChart();
+
+        this.$watch("zoom", (val) => {
+            this.chart.updateOptions({
+                responsive: [{
+                    breakpoint: 768,
+                    options: {
+                        chart: {
+                            zoom: {
+                                enabled: val
+                            }
+                        },
+                    },
+                }]
+            });
+        });
     },
     /**
      * Realiza la consulta a la API e iguala la variable `data` de la clase al
@@ -63,8 +79,13 @@ export default () => ({
                 categories
             },
             responsive: [{
-                breakpoint: 500,
+                breakpoint: 768,
                 options: {
+                    chart: {
+                        zoom: {
+                            enabled: false
+                        }
+                    },
                     xaxis: {
                         type: 'category',
                         labels: {
