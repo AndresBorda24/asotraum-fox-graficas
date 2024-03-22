@@ -3,18 +3,23 @@
 .home-graph {
     border: 1px;
     border-style: dashed;
-    transition: box-shadow 150ms ease-out,
-                transform 100ms ease-in;
-    &:hover {
-        transform: translate(3px, -3px);
-        border-style: solid;
-        box-shadow: -15px 15px 0px 4px rgb(123 123 123 / 20%);
-    }
 }
 
 #general-summary{
     overflow-x: auto;
     & >div {
         min-width: 310px;
+    }
+}
+
+@media (min-width: 768px) {
+    .home-graph {
+        transition: box-shadow 150ms ease-out,
+                    transform 100ms ease-in;
+        &:hover {
+            transform: translate(3px, -3px);
+            border-style: solid;
+            box-shadow: -15px 15px 0px 4px rgb(123 123 123 / 20%);
+        }
     }
 }
