@@ -12,6 +12,9 @@
     }
 }
 
-#general-summary {
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+#general-summary{
+    overflow-x: auto;
+    & >div {
+        min-width: 300px;
+    }
 }

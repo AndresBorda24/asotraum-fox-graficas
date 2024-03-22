@@ -49,11 +49,11 @@
           <span class="badge text-bg-primary position-absolute top-0 end-0">
             Del
             <span
-              class="d-inline-block mx-2"
+              class="d-inline-block mx-1"
               x-text="new Date(data[0].meta?.dates?.start).toJSON().substring(0, 10)"
             ></span> al
             <span
-              class="d-inline-block ms-2"
+              class="d-inline-block ms-1"
               x-text="new Date(data[0].meta?.dates?.end).toJSON().substring(0, 10)"
             ></span>
           </span>

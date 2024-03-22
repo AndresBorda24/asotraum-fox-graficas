@@ -3,6 +3,7 @@ import "../css/home.css";
 import Alpine from "alpinejs";
 import addYears from "../partials/add-years";
 import admisiones from "./partials/admisiones";
+import admisionesSummary from "./partials/admisiones-summary";
 import facturacionGeneral from "../ventas/components/facturacion-general";
 
 window.Alpine = Alpine;
@@ -10,6 +11,7 @@ window.Alpine = Alpine;
 document.addEventListener('alpine:init', () => {
     Alpine.data("addYears", addYears);
     Alpine.data("admisionesGenearl", admisiones);
+    Alpine.data("admisionesSummary", admisionesSummary);
     Alpine.data("facturacionGeneral", facturacionGeneral);
     Alpine.data("iniciarGraficas", () => ({
         init() {
