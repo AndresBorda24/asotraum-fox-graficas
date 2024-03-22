@@ -12,6 +12,25 @@
           Cargando información, por favor espera &#8230;
         </p>
       </template>
+      <template x-if="data.data">
+        <div>
+          <p class="mt-2 mb-1">Mostrando cantidad de admisiones por hora de los siguientes días: </p>
+          <ul class="mb-2">
+            <template x-for="day in Object.keys(data.data)">
+              <li>
+                <span
+                  x-text="day"
+                  class="fw-bold"
+                ></span>
+                <span
+                  class="small"
+                  x-text="`(${Object.values(data.data[day]).reduce((a, b) => a + b, 0)})`"
+                ></span>
+              </li>
+            </template>
+          </ul>
+        </div>
+      </template>
     </div>
   </div>
 

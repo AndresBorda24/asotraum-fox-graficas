@@ -15,6 +15,6 @@
 #general-summary{
     overflow-x: auto;
     & >div {
-        min-width: 300px;
+        min-width: 310px;
     }
 }
