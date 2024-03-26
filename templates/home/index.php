@@ -8,6 +8,7 @@
     <?= $this->fetch("./home/partials/admisiones-summary.php") ?>
     <?= $this->fetch("./home/partials/facturacion.php") ?>
     <?= $this->fetch("./home/partials/admisiones.php") ?>
+    <?= $this->fetch("./home/partials/qx-summary.php") ?>
   </div>
   <span x-data="iniciarGraficas"></span>
 </main>
