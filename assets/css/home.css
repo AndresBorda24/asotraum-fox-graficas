@@ -5,17 +5,50 @@
     border-style: dashed;
 }
 
-#general-summary{
+#general-summary {
     overflow-x: auto;
-    & >div {
+
+    &>div {
         min-width: 310px;
+        max-width: 360px;
     }
 }
 
+/* Barras de scroll */
+ #general-summary{
+    --sb-track-color: #ffffff;
+    --sb-thumb-color: #bdbdbd;
+    --sb-size: 8px;
+}
+
+#general-summary::-webkit-scrollbar {
+    width: var(--sb-size);
+    height: var(--sb-size);
+}
+
+#general-summary::-webkit-scrollbar-track {
+    background: var(--sb-track-color);
+    border-radius: 3px;
+}
+
+#general-summary::-webkit-scrollbar-thumb {
+    background: var(--sb-thumb-color);
+    border-radius: 3px;
+
+}
+
+@supports not selector(::-webkit-scrollbar) {
+    body {
+        scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
+    }
+}
+
+/* Fin Barras de Scroll */
 @media (min-width: 768px) {
     .home-graph {
         transition: box-shadow 150ms ease-out,
-                    transform 100ms ease-in;
+            transform 100ms ease-in;
+
         &:hover {
             transform: translate(3px, -3px);
             border-style: solid;
