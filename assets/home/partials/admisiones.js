@@ -58,9 +58,9 @@ export default () => ({
                 this.data[0].urgencia
             ],
             labels: [
-                `Hospitalarios: ${this.data[0].hospita}`,
-                `Ambulatorios: ${this.data[0].ambula}`,
-                `Urgencias: ${this.data[0].urgencia}`
+                `Hospitalarios`,
+                `Ambulatorios`,
+                `Urgencias`
             ],
         });
     },
