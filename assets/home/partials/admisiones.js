@@ -22,7 +22,10 @@ export default () => ({
      * resultado.
     */
     async getData() {
-        const endPoint = "http://192.168.1.1/asotrauma/servicios/estadisticas/traerEst.php";
+        const endPoint = (import.meta.env.DEV
+            ? "http://192.168.1.1"
+            : ""
+        ) + "/asotrauma/servicios/estadisticas/traerEst.php";
         return axios
             .get(`${endPoint}`)
             .catch(error => console.error("Axios Handler: ", error));
