@@ -2,7 +2,7 @@
   "title" => "Clínica Asotrauma | Estadísticas"
 ]) ?>
 <main class="container py-4">
-  <section class="d-flex px-2 pb-4 gap-3 justify-content-start mb-4" id="general-summary">
+  <section class="d-flex px-3 pb-4 gap-3 justify-content-start mb-4" id="general-summary">
     <?= $this->fetch("./home/partials/admisiones.php") ?>
   </section>
 

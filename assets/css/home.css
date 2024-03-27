@@ -17,8 +17,8 @@
 /* Barras de scroll */
  #general-summary{
     --sb-track-color: #ffffff;
-    --sb-thumb-color: #bdbdbd;
-    --sb-size: 8px;
+    --sb-thumb-color: #cacaca;
+    --sb-size: 5px;
 }
 
 #general-summary::-webkit-scrollbar {
@@ -34,7 +34,6 @@
 #general-summary::-webkit-scrollbar-thumb {
     background: var(--sb-thumb-color);
     border-radius: 3px;
-
 }
 
 @supports not selector(::-webkit-scrollbar) {

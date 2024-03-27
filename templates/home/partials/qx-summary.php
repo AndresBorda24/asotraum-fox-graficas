@@ -52,7 +52,7 @@
           style="font-size: 3.7rem"
           class="text-dark border border-primary p-2 rounded-bottom-pill bg-primary-subtle"
         > <?= $this->fetch("./icons/doctor.php") ?> </span>
-        <p class="p-2 text-end text-muted">
+        <p class="p-2 text-end text-muted m-0 align-self-center">
           Cantidad total de cirugías programadas es de
           <span x-text="total.neto" class="fw-bold"></span>, de las cuales
           <span x-text="total.cumplidas" class="fw-bold"></span> ya han sido cumplidas
