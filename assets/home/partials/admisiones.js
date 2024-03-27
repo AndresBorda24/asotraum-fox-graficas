@@ -71,7 +71,7 @@ export default () => ({
         const options = {
             chart: {
                 type: 'pie',
-                height: 350
+                height: "200px"
             },
             noData: {
                 text: "No info..."

@@ -1,5 +1,5 @@
-<div x-data="admisionesGenearl" id="admisiones-general-container" class="position-relative">
-  <div class="p-3 pb-0 rounded bg-light shadow">
+<div x-data="admisionesGenearl" id="admisiones-general-container" class="position-relative" style="min-width: 340px;">
+  <div class="p-3 pb-0 rounded bg-light shadow h-100">
     <header class="mb-2 position-relative">
       <h3>
         Admisiones
