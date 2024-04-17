@@ -22,7 +22,10 @@ export default () => ({
      * resultado.
     */
     async getData() {
-        const endPoint = "http://192.168.1.1/asotrauma/servicios/estadisticas/traerEst.php";
+        const endPoint = (import.meta.env.DEV
+            ? "http://192.168.1.1"
+            : ""
+        ) + "/asotrauma/servicios/estadisticas/traerEst.php";
         return axios
             .get(`${endPoint}`)
             .catch(error => console.error("Axios Handler: ", error));
@@ -58,9 +61,9 @@ export default () => ({
                 this.data[0].urgencia
             ],
             labels: [
-                `Hospitalarios: ${this.data[0].hospita}`,
-                `Ambulatorios: ${this.data[0].ambula}`,
-                `Urgencias: ${this.data[0].urgencia}`
+                `Hospitalarios`,
+                `Ambulatorios`,
+                `Urgencias`
             ],
         });
     },
@@ -71,7 +74,7 @@ export default () => ({
         const options = {
             chart: {
                 type: 'pie',
-                height: 350
+                height: "200px"
             },
             noData: {
                 text: "No info..."

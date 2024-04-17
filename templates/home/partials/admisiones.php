@@ -1,52 +1,17 @@
-<div
-  x-data="admisionesGenearl"
-  id="admisiones-general-container"
-  class="home-graph p-3 text-muted border-dark-subtle position-relative rounded overflow-auto bg-light"
->
-  <div class="d-flex flex-wrap align-items-center justify-content-between mb-2 gap-2">
-    <div class="flex-grow-1">
-      <h4 class="m-0 fs-6 badge text-bg-warning">Tipo de Atención - Admisiones</h4>
-      <template x-if="data.length">
-        <p class="my-2">
-            Mostrando información del día de hoy:
-            <span x-text="data[0].fecha" class="badge text-bg-primary"></span>
-        </p>
-      </template>
-
-      <template x-if="data.length == 0">
-        <p class="my-2">
-          Cargando información, por favor espera &#8230;
-        </p>
-      </template>
+<div x-data="admisionesGenearl" id="admisiones-general-container" class="position-relative" style="min-width: 340px;">
+  <div class="p-3 pb-0 rounded bg-light shadow h-100">
+    <header class="mb-2 position-relative">
+      <h3>
+        Admisiones
+        <span class="fs-6" x-text="data[0] && `(${data[0].total})`"></span>
+      </h3>
+      <span
+      x-text="data[0] && data[0].fecha"
+      class="badge text-bg-primary position-absolute top-0 end-0"
+      ></span>
+    </header>
+    <div class="d-flex align-items-center flex-column">
+      <div id="admisiones-general"></div>
     </div>
   </div>
-
-  <div>
-    <!-- Contenedor de la grafica -->
-    <div class="mx-auto bg-body border shadow-sm" id="admisiones-general"></div>
-  </div>
-
-  <template x-teleport="#general-summary">
-    <div class="p-3 rounded bg-light shadow">
-      <header class="mb-2 position-relative">
-        <h3>Admisiones</h3>
-        <span
-          x-text="data[0] && data[0].fecha"
-          class="badge text-bg-primary position-absolute top-0 end-0"
-        ></span>
-      </header>
-      <div class="d-flex align-items-center">
-        <span class="fs-1 text-success p-2 rounded-bottom-pill bg-success-subtle border-success border">
-          <?= $this->fetch("./icons/people.php") ?>
-        </span>
-        <div class="flex-fill text-end">
-          <span
-            class="fs-3 d-block"
-            x-text="data[0] && data[0].total"
-          ></span>
-          <span class="text-muted small">Total Admisiones</span>
-        </div>
-      </div>
-    </div>
-  </template>
 </div>

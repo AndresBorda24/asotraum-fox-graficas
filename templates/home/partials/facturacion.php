@@ -59,29 +59,36 @@
           </span>
         </template>
       </header>
-      <div class="d-flex align-items-center">
-        <span class="fs-1 text-dark border border-dark p-2 rounded-bottom-pill bg-warning-subtle">
-          <?= $this->fetch("./icons/money.php") ?>
-        </span>
-        <div class="flex-fill text-end">
-          <span
-            class="fs-3 d-block"
-            x-text="data[0] && new Intl.NumberFormat('es-CO', {
-              style: 'currency',
-              currency: 'COP',
-              maximumFractionDigits: 0,
-              minimumFractionDigits: 0
-            }).format( data[0].meta.total.cash )"
-          ></span>
-          <span
-            class="text-muted small"
-            x-text="data[0] && `Radicado: ${new Intl.NumberFormat('es-CO', {
-              style: 'currency',
-              currency: 'COP',
-              maximumFractionDigits: 0,
-              minimumFractionDigits: 0
-            }).format( data[0].data.radicado.total )}`"></span>
-        </div>
+      <div class="d-flex">
+        <span
+          style="font-size: 3.7rem"
+          class="text-dark border border-dark p-2 rounded-bottom-pill bg-warning-subtle"
+        > <?= $this->fetch("./icons/money.php") ?> </span>
+          <template x-if="data[0]">
+            <div class="flex-fill text-end">
+              <span
+                class="fs-3 d-block"
+                x-text="data[0] && formatter.format( data[0].meta.total.cash )"
+              ></span>
+              <span
+                class="text-muted small d-block"
+                x-text="data[0] && `Radicado: ${formatter.format( data[0].data.radicado.total )}`"
+              ></span>
+              <span
+                class="text-muted small d-block"
+                x-text="data[0] && `Pendiente: ${formatter.format( data[0].data.pendiente.total )}`"
+              ></span>
+              <span
+                class="text-muted small d-block"
+                x-text="data[0] && `Sin Radiación: ${formatter.format( data[0].data['sin-radicacion'].total )}`"
+              ></span>
+            </div>
+          </template>
+          <template x-if="! data[0]">
+            <p class="p-3 text">
+              Cargando información, por favor espera &#8230;
+            </p>
+          </template>
       </div>
     </div>
   </template>
