@@ -15,18 +15,27 @@ document.addEventListener('alpine:init', () => {
     Alpine.data("admisionesGenearl", admisiones);
     Alpine.data("admisionesSummary", admisionesSummary);
     Alpine.data("facturacionGeneral", facturacionGeneral);
-    Alpine.data("iniciarGraficas", () => ({
+    Alpine.data("cambiarFechas", () => ({
+        to: "",
+        from: "",
         init() {
             // Aqui inicializamos las graficas con las fechas del ultimo mes
-            const de = new Date();
-            const ds = new Date();
-            ds.setDate(1);
-            this.$dispatch("new-dates-range", {
-                start: ds.toJSON().substring(0, 10),
-                end: de.toJSON().substring(0, 10)
+            const to = new Date();
+            const from = new Date();
+            from.setDate(1);
+
+            this.to = to.toJSON().substring(0, 10);
+            this.from = from.toJSON().substring(0, 10);
+            this.updateDates();
+        },
+
+        updateDates() {
+            this.updateChart({
+                end: this.to,
+                start: this.from
             });
         }
-    }))
+    }));
 });
 
 document.addEventListener("DOMContentLoaded", () => {

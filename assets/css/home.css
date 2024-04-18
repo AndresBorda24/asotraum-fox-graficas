@@ -9,7 +9,7 @@
     overflow-x: auto;
 
     &>div {
-        min-width: 310px;
+        min-width: 350px;
         max-width: 360px;
     }
 }

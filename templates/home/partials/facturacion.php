@@ -42,7 +42,7 @@
   </a>
 
   <template x-teleport="#general-summary">
-    <div class="p-3 rounded bg-light shadow">
+    <div class="px-3 py-2 d-flex flex-column gap-2 rounded bg-light shadow">
       <header class="mb-2 position-relative">
         <h3>Ventas</h3>
         <template x-if="data[0]">
@@ -59,7 +59,7 @@
           </span>
         </template>
       </header>
-      <div class="d-flex">
+      <div class="d-flex flex-fill">
         <span
           style="font-size: 3.7rem"
           class="text-dark border border-dark p-2 rounded-bottom-pill bg-warning-subtle"
@@ -90,6 +90,35 @@
             </p>
           </template>
       </div>
+      <footer
+        x-data="cambiarFechas"
+        class="d-flex gap-2 pt-2 border-top align-items-center"
+      >
+        <label for="ventas-from" class="small flex-fill">
+          Desde
+          <input
+            class="form-control form-control-sm"
+            type="date"
+            name="from"
+            id="ventas-from"
+            x-model="from"
+          >
+        </label>
+        <label for="ventas-to" class="small flex-fill">
+          Hasta
+          <input
+            class="form-control form-control-sm"
+            type="date"
+            name="to"
+            id="ventas-to"
+            x-model="to"
+          >
+        </label>
+        <button
+          class="btn btn-sm border"
+          @click="updateDates"
+        ><?= $this->fetch("./icons/search.php") ?></button>
+      </footer>
     </div>
   </template>
 </div>
