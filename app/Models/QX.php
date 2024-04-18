@@ -13,11 +13,10 @@ class QX
         public readonly ConnectionFox $db
     ) {}
 
-    public function count(string $date): array
+    /** Cuenta las cirugias de quirofano agrupandolas por su tipo y estado */
+    public function count(\DateTime $from, \DateTime $to): array
     {
-        $f = date("m.d.y", strtotime($date));
-
-        $query = $this->db->query(
+        $query = $this->db->query(sprintf(
             "SELECT
                 CR.lugar,
                 CR.tipo_ciru AS tipo,
@@ -27,8 +26,9 @@ class QX
             LEFT JOIN GEMA10.D/IPT/DATOS/PUNTO_AT AS PA
                 ON CR.lugar = PA.punto_at
             WHERE
-                CR.fecha = CTOD('$f')"
-        );
+                CR.fecha BETWEEN CTOD('%s') AND CTOD('%s')",
+            $from->format('m.d.y'), $to->format('m.d.y')
+        ));
 
         if ($query === false)
             throw new \PDOException("Error en consulta: ". $this->db->errorCode());

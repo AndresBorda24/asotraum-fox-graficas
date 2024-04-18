@@ -3,6 +3,8 @@ import ApexCharts from 'apexcharts';
 import { createLoader, removeLoader } from "../../partials/loader";
 
 export default () => ({
+    to: "",
+    from: "",
     data: null,
     chart: undefined,
     chartWrapper: "qx-summary",
@@ -24,7 +26,9 @@ export default () => ({
     async getData() {
         const endPoint = `${import.meta.env.VITE_API}/qx/summary`;
         return axios
-            .get(`${endPoint}`)
+            .get(endPoint, {
+                params: { from: this.from, to: this.to }
+            })
             .catch(error => console.error("Axios Handler: ", error));
     },
     /**
@@ -40,6 +44,8 @@ export default () => ({
 
         this.data = res.data;
         this.updateChartSeries();
+        this.to = this.data.dates.to;
+        this.from = this.data.dates.from;
     },
     /**
      * Actualiza las series y las categorias del grafico
@@ -48,18 +54,19 @@ export default () => ({
         const tipo = [];
         const estado = [];
 
+        const data = this.data.data;
         ['Cumplidas', 'Canceladas', 'Pendientes'].forEach(t => {
             const serie = { name: t, group: "tipo", data: [] };
-            Object.keys(this.data).forEach(key => serie.data.push(
-                this.data[key][t]
+            Object.keys(data).forEach(key => serie.data.push(
+                data[key][t]
             ));
             tipo.push(serie);
         });
 
         ['Ambulatorias', 'Hospitalarias'].forEach(e => {
             const serie = { name: e, group: "estado", data: [] };
-            Object.keys(this.data).forEach(key => serie.data.push(
-                this.data[key][e]
+            Object.keys(data).forEach(key => serie.data.push(
+                data[key][e]
             ));
             estado.push(serie);
         });
@@ -68,8 +75,8 @@ export default () => ({
             series: [...tipo, ...estado],
             xaxis: {
                 type: 'category',
-                categories: Object.keys(this.data).map(
-                    q => `${q} Total: ${this.data[q]['total']}`
+                categories: Object.keys(data).map(
+                    q => `${q} Total: ${data[q]['total']}`
                 )
             }
         });
@@ -113,10 +120,14 @@ export default () => ({
 
         if (this.data === null) return totales;
 
-        return Object.keys(this.data).reduce((total, qx) => {
-            total.neto      += this.data[qx].total;
-            total.cumplidas += this.data[qx].Cumplidas
+        return Object.keys(this.data.data).reduce((total, qx) => {
+            total.neto      += this.data.data[qx].total;
+            total.cumplidas += this.data.data[qx].Cumplidas
             return total;
         }, totales);
+    },
+
+    get fechas() {
+        return this.data?.dates;
     }
 })

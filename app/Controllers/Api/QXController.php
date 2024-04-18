@@ -23,14 +23,26 @@ class QXController
     public function summary(Response $response, Request $request): Response
     {
         @[
-            "date" => $date,
+            "from" => $from,
+            "to" => $to
         ] = $request->getQueryParams();
 
-        $ctrlDate = new \DateTime($date ?? 'now');
+        try {
+            $to   = new \DateTime($to ? $to : 'now');
+            $from = new \DateTime($from ? $from : '7 days ago');
+        } catch (\Exception $e) {
+            return responseJson( $response, [
+                "status"  => false,
+                "message" => "Las fechas suministradas no son validas"
+            ], 422);
+        }
 
-        return responseJson(
-            $response,
-            $this->qx->count($ctrlDate->format("Y-m-d"))
-        );
+        return responseJson( $response, [
+            "data"  => $this->qx->count($from, $to),
+            "dates" => [
+                "from" => $from->format("Y-m-d"),
+                "to" => $to->format("Y-m-d")
+            ]
+        ]);
     }
 }

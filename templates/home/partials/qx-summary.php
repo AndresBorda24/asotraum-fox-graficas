@@ -13,11 +13,9 @@
       </template>
       <template x-if="data != null">
         <p class="my-2">
-          Mostrando Cantidad, Tipo y Estado de cirugías programadas para el dia:
-          <span
-            class="badge text-bg-primary"
-            x-text="(new Date).toJSON().substring(0, 10)"
-          ></span>
+          Mostrando Cantidad, Tipo y Estado de cirugías programadas para el dia
+          <span class="badge text-bg-primary d-inline-block mx-1" x-text="fechas?.from"></span> hasta
+          <span class="badge text-bg-primary d-inline-block ms-1" x-text="fechas?.to"></span>
         </p>
       </template>
     </div>
@@ -38,16 +36,11 @@
   </a>
 
   <template x-teleport="#general-summary">
-    <div class="p-3 rounded bg-light shadow">
+    <div class="py-2 px-3 rounded bg-light shadow">
       <header class="mb-2 position-relative">
-        <h3> Cirugías </h3>
-        <template x-if="data !== null">
-          <span
-            class="badge text-bg-primary position-absolute top-0 end-0 m-1"
-            x-text="(new Date).toJSON().substring(0, 10)"></span>
-        </template>
+        <span class="fw-semibold fs-5">Cirugías</span>
       </header>
-      <div class="d-flex ">
+      <div class="d-flex">
         <span
           style="font-size: 3.7rem"
           class="text-dark border border-primary p-2 rounded-bottom-pill bg-primary-subtle"
@@ -58,6 +51,32 @@
           <span x-text="total.cumplidas" class="fw-bold"></span> ya han sido cumplidas
         </p>
       </div>
+      <footer class="d-flex gap-2 pt-2 border-top mt-2 align-items-center">
+        <label for="from" class="small flex-fill">
+          Desde
+          <input
+            class="form-control form-control-sm"
+            type="date"
+            name="from"
+            id="from"
+            x-model="from"
+          >
+        </label>
+        <label for="to" class="small flex-fill">
+          Hasta
+          <input
+            class="form-control form-control-sm"
+            type="date"
+            name="to"
+            id="to"
+            x-model="to"
+          >
+        </label>
+        <button
+          class="btn btn-sm border"
+          @click="updateChart"
+        ><?= $this->fetch("./icons/search.php") ?></button>
+      </footer>
     </div>
   </template>
 </div>
