@@ -43,21 +43,8 @@
 
   <template x-teleport="#general-summary">
     <div class="px-3 py-2 d-flex flex-column gap-2 rounded bg-light shadow">
-      <header class="mb-2 position-relative">
-        <h3>Ventas</h3>
-        <template x-if="data[0]">
-          <span class="badge text-bg-primary position-absolute top-0 end-0">
-            Del
-            <span
-              class="d-inline-block mx-1"
-              x-text="new Date(data[0].meta?.dates?.start).toJSON().substring(0, 10)"
-            ></span> al
-            <span
-              class="d-inline-block ms-1"
-              x-text="new Date(data[0].meta?.dates?.end).toJSON().substring(0, 10)"
-            ></span>
-          </span>
-        </template>
+      <header class="position-relative">
+        <span class="fw-semibold fs-5">Ventas</span>
       </header>
       <div class="d-flex flex-fill">
         <span
@@ -65,7 +52,7 @@
           class="text-dark border border-dark p-2 rounded-bottom-pill bg-warning-subtle"
         > <?= $this->fetch("./icons/money.php") ?> </span>
           <template x-if="data[0]">
-            <div class="flex-fill text-end">
+            <div class="flex-fill text-end align-self-center">
               <span
                 class="fs-3 d-block"
                 x-text="data[0] && formatter.format( data[0].meta.total.cash )"
