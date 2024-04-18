@@ -60,6 +60,9 @@ export default () => ({
                 this.data[0].ambula,
                 this.data[0].urgencia
             ],
+            legend: {
+                position: 'bottom'
+            },
             labels: [
                 `Hospitalarios`,
                 `Ambulatorios`,
@@ -74,7 +77,7 @@ export default () => ({
         const options = {
             chart: {
                 type: 'pie',
-                height: "200px"
+                height: 250
             },
             noData: {
                 text: "No info..."
