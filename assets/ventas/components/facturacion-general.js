@@ -27,7 +27,7 @@ export default () => ({
      * resultado.
     */
     async getData(start, end) {
-        const endPoint = process.env.API + "/ventas/resumen-general";
+        const endPoint = import.meta.env.VITE_API + "/ventas/resumen-general";
         return axios
             .get(`${endPoint}?start=${start}&end=${end}`)
             .catch(error => console.error("Axios Handler: ", error));

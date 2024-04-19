@@ -1,15 +1,18 @@
-<header class="p-2 mb-4 shadow bg-body">
-  <div class="container d-flex border-bottom align-items-center mb-0">
-    <img
-    class="m-2" src="<?= $this->asset("/img/logo_aso.png") ?>"
-    alt="logo-aso"
-    height="30">
-    <span class="m-0 fs-4">Cl&iacute;nica Asotrauma</span>
+<header class="bg-primary">
+  <div class="container p-3 d-flex align-items-center justify-content-between">
+    <a href="/graficas">
+      <img
+      height="25"
+      src="https://asotrauma.com.co/wp-content/uploads/2021/08/logo-asotrauma-w.svg"
+      alt="logo-blanco">
+    </a>
   </div>
-  <nav class="container d-flex justify-content-center flex-wrap small gap-1">
-    <a
-    class="btn btn-sm btn-outline-dark rounded-0 rounded-bottom shadow-sm
-    <?= ($this->isRoute("ventas") || $this->isRoute("ventas.grilla")) ? 'active' : '' ?>"
-    href="<?= $this->link('ventas') ?>">Ventas</a>
-  </nav>
 </header>
+<div class="bg-secondary text-light shadow sticky-top z-1">
+  <div
+  class="container d-flex flex-column flex-md-row justify-content-between nav-scroller p-1">
+    <span class="fs-5"><?=  $title ?? "Cl&iacute;nica Asotrauma" ?></span>
+    <div class="align-items-center d-flex gap-1">
+    </div>
+  </div>
+</div>

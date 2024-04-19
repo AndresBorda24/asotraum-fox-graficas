@@ -19,6 +19,7 @@ class Views extends PhpRenderer
         private Config $config
     ) {
         parent::__construct( $this->config->get('assets.templates') );
+        $this->setLayout("layouts/main.php");
     }
 
     /**
@@ -41,21 +42,25 @@ class Views extends PhpRenderer
          * En el archivo de entrypoints esta folder(name)/app para
          * identificar los archivos de cada vista.
         */
-        $k = $name . "/app";
-        if (!array_key_exists($k, $ep["entrypoints"])) return "";
+        if (!array_key_exists($name, $ep)) return "";
 
-        /**
-         * Tags `script` y `link`
-        */
-        $tags = "";
+        /** Cargamos el archivo js principal */
+        $tags = "<script src=\"/graficas/build/".$ep[$name]['file']."\" type=\"module\"></script>\n";
 
-        foreach ($ep["entrypoints"][$k] as $type => $assets) {
-            foreach ($assets as $asset) {
-                $tags .= match ($type) {
-                    'js'  => "<script src=\"$asset\" type=\"text/javascript\"></script>",
-                    'css' => "<link rel=\"stylesheet\" type=\"text/css\" href=\"$asset\">",
-                    default => ""
-                };
+        $loadCss = function(array $cssFiles) use(&$tags) {
+            foreach ($cssFiles as $file) {
+                $tags .= "<link rel=\"stylesheet\" type=\"text/css\" href=\"/graficas/build/$file\"> \n";
+            }
+        };
+
+        /* Cargamos el CSS especifico para esa entrada */
+        if (array_key_exists("css", $ep[$name])) $loadCss($ep[$name]["css"]);
+
+        /* Cargamos el CSS de los archivos js que se */
+        if (array_key_exists("imports", $ep[$name])) {
+            $imp = $ep[$name]["imports"];
+            foreach ($imp as $file) {
+                if (array_key_exists("css", $ep[$file])) $loadCss($ep[$file]["css"]);
             }
         }
 

@@ -33,3 +33,21 @@ if (! function_exists('App\trimUtf8')) {
         );
     }
 }
+
+if (! function_exists('App\trimUtf8')) {
+    /**
+     * Convierte el texto en utf8 y quita los espacios en blanco. USAR
+     * SOLAMENTE CON LAS CONSULTAS DE FOX
+    */
+    function trimUtf8(string $str): string
+    {
+        $prevEncode = mb_detect_encoding($str, [
+            "CP1252", // <- encoding por defecto de Fox
+            "UTF-8"
+        ]);
+
+        return trim(
+            mb_convert_encoding($str, 'UTF-8', $prevEncode)
+        );
+    }
+}
