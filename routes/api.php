@@ -15,8 +15,9 @@ use App\Middleware\StartEndDatesMiddleware;
 function loadApiRoutes(App $app): void {
     $app->group("/api", function(RouteCollectorProxy $api) {
         $api->group("/qx", function(RouteCollectorProxy $adm) {
-            $adm->get("/summary", [QXController::class, "summary"] );
-            $adm->get("/motivos-cancelacion", [QXController::class, "motivosCancelacion"] );
+            $adm->get("/summary", [QXController::class, "summary"]);
+            $adm->get("/medicos", [QXController::class, "medicos"]);
+            $adm->get("/motivos-cancelacion", [QXController::class, "motivosCancelacion"]);
         });
 
         $api->group("/admisiones", function(RouteCollectorProxy $adm) {

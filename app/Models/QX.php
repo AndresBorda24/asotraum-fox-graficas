@@ -65,4 +65,31 @@ class QX
 
         return $this->formatter->forMotivosCancelacion($query);
     }
+
+    /**
+     * Obtiene y agrupa los medicos que han realizado cirugias que no han sido
+     * canceladas.
+     */
+    public function medicos(
+        \DateTimeInterface $from,
+        \DateTimeInterface $to
+    ): array {
+        $query = $this->db->query(sprintf(
+            "SELECT
+                CR.tipo_ciru as tipo,
+                ME.nombre as medico_nombre
+            FROM GEMA10.D/SALUD/DATOS/CIRUGPROG  AS CR
+            LEFT JOIN GEMA_MEDICOS/DATOS/MEDICOS AS ME
+                ON ME.codigo = CR.medico
+            WHERE
+                CR.fecha BETWEEN CTOD('%s') AND CTOD('%s')
+                AND CR.moti_canc = '  '",
+            $from->format('m.d.y'), $to->format('m.d.y')
+        ));
+
+        if ($query === false)
+            throw new \PDOException("Error en consulta: ". $this->db->errorCode());
+
+        return $this->formatter->forMedicos($query);
+    }
 }

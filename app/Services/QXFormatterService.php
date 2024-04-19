@@ -62,4 +62,18 @@ class QXFormatterService
         }
         return $data;
     }
+
+    public function forMedicos(\PDOStatement $result): array
+    {
+        $data = [];
+
+        while ($row = $result->fetch(\PDO::FETCH_ASSOC)) {
+            $med = trimUtf8($row["medico_nombre"]);
+            $data[$med] ??= [ "A" => 0, "H" => 0 ];
+
+            $data[$med][ $row["tipo"] ] += 1;
+        }
+
+        return $data;
+    }
 }

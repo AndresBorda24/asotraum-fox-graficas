@@ -46,4 +46,18 @@ class QXController
             ]
         ]);
     }
+
+    public function medicos(
+        Response $response,
+        \DateTimeInterface $from,
+        \DateTimeInterface $to
+    ): Response {
+        return responseJson( $response, [
+            "data"  => $this->qx->medicos($from, $to),
+            "dates" => [
+                "from" => $from->format("Y-m-d"),
+                "to" => $to->format("Y-m-d")
+            ]
+        ]);
+    }
 }
