@@ -11,9 +11,10 @@ export default defineConfig(({ mode }) => {
     plugins: [
       laravel({
         input: [
-            "assets/ventas/index.js",
-            "assets/ventas/grilla.js",
-            "assets/home/index.js"
+          "assets/qx/index.js",
+          "assets/ventas/index.js",
+          "assets/ventas/grilla.js",
+          "assets/home/index.js"
         ],
       }),
     ],

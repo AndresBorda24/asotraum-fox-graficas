@@ -26,7 +26,8 @@ class QX
             LEFT JOIN GEMA10.D/IPT/DATOS/PUNTO_AT AS PA
                 ON CR.lugar = PA.punto_at
             WHERE
-                CR.fecha BETWEEN CTOD('%s') AND CTOD('%s')",
+                CR.fecha BETWEEN CTOD('%s') AND CTOD('%s')
+                AND CR.moti_canc = '  '",
             $from->format('m.d.y'), $to->format('m.d.y')
         ));
 
