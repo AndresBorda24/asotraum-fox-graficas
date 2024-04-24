@@ -86,22 +86,6 @@ export default () => ({
         );
     },
 
-    /** Sumatoria del total de todos los quirofanos */
-    get total() {
-        const totales = {
-            neto: 0,
-            cumplidas: 0
-        };
-
-        if (this.data === null) return totales;
-
-        return Object.keys(this.data.data).reduce((total, qx) => {
-            total.neto += this.data.data[qx].total;
-            total.cumplidas += this.data.data[qx].Cumplidas
-            return total;
-        }, totales);
-    },
-
     get fechas() {
         return this.data?.dates;
     }

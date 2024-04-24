@@ -7,8 +7,8 @@
 >
   <div class="d-flex flex-column">
     <header class="text-dark-subtle p-3 border-bottom">
-      <span class="fs-4">Motivos Cancelación</span>
-      <p class="text-muted m-0">Mostrando los 9 motivos de cancelación más recurrententes en el rango de fechas indicado. </p>
+      <span class="fs-4">Motivos de Cancelación</span>
+      <p class="text-muted m-0">Mostrando los 9 motivos de cancelación más recurrentes en el rango de fechas indicado. </p>
     </header>
     <div id="motivos-cancelacion" class="flex-grow-1 -d-flex -mx-auto -justify-content-center"></div>
   </div>
