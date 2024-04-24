@@ -8,4 +8,5 @@
     <?= $this->fetch("./QX/partials/general.php") ?>
   </div>
   <?= $this->fetch("./QX/partials/motivos-cancelacion.php") ?>
+  <?= $this->fetch("./QX/partials/medicos.php") ?>
 </main>
