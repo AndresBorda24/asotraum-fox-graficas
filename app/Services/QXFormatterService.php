@@ -43,22 +43,23 @@ class QXFormatterService
     public function forMotivosCancelacion(\PDOStatement $result): array
     {
         $data = [
-            "_data"   => [],
-            "motivos" => []
+            "total" => [],
+            "otros" => []
         ];
 
         while ($row = $result->fetch(\PDO::FETCH_ASSOC)) {
-            $lugar = trimUtf8($row["lugar_nombre"]);
+            $total = $row["total"];
             $motiv = trimUtf8($row["motivo_cancelacion"]);
-            $motivCod = trimUtf8($row["motivo_cod"]);
 
-            $data["_data"][$lugar] ??= [];
-            $data["_data"][$lugar][$motivCod] ??= 0;
-            $data["_data"][$lugar][$motivCod] += 1;
-
-            if (! array_key_exists($motivCod, $data["motivos"])) {
-                $data["motivos"][$motivCod] = $motiv;
+            if (count($data["total"]) < 9) {
+                $data["total"][$motiv] = (int) $total;
+                continue;
             }
+
+            $data["total"]["otros"] ??= 0;
+            $data["total"]["otros"] += $total;
+
+            $data["otros"][$motiv] = (int) $total;
         }
         return $data;
     }

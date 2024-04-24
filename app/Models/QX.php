@@ -47,17 +47,16 @@ class QX
     ): array {
         $query = $this->db->query(sprintf(
             "SELECT
-                PA.nombre As lugar_nombre,
-                CR.moti_canc AS motivo_cod,
+                COUNT(MC.nombre) AS total,
                 MC.nombre AS motivo_cancelacion
             From GEMA10.D/SALUD/DATOS/CIRUGPROG  As CR
-            Left Join GEMA10.D/IPT/DATOS/PUNTO_AT As PA
-                On CR.lugar = PA.PUNTO_AT
             LEFT JOIN gema10.d\SALUD\DATOS\MOTIV_CANC AS MC
                 ON CR.moti_canc = MC.codigo
             WHERE
                 CR.fecha BETWEEN CTOD('%s') AND CTOD('%s')
-                AND CR.moti_canc != '  '",
+                AND CR.moti_canc != '  '
+            GROUP BY MC.nombre
+            ORDER BY total DESC",
             $from->format('m.d.y'), $to->format('m.d.y')
         ));
 
