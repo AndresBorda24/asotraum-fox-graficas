@@ -64,17 +64,33 @@ class QXFormatterService
         return $data;
     }
 
-    public function forMedicos(\PDOStatement $result): array
+    /**
+     * Agrupa y cuenta el tipo de cirugias realizadas por medicos y devuelve un
+     * array ordenado de mayor a menor (con respecto a numero de cirugias
+     * realizadas)
+     *
+     * @param int $limit Define el limite de medicos a retornar.
+     */
+    public function forMedicos(\PDOStatement $result , int $limit = 10): array
     {
         $data = [];
 
         while ($row = $result->fetch(\PDO::FETCH_ASSOC)) {
-            $med = trimUtf8($row["medico_nombre"]);
+            $med = trimUtf8($row["medico_nombre"] ?? '');
             $data[$med] ??= [ "A" => 0, "H" => 0 ];
 
             $data[$med][ $row["tipo"] ] += 1;
         }
 
-        return $data;
+        uasort($data, function ($a, $b) {
+            $aTotal = $a["A"] + $a["H"];
+            $bTotal = $b["A"] + $b["H"];
+
+            if ($aTotal === $bTotal) return 0;
+
+            return ($aTotal > $bTotal) ? -1 : 1;
+        });
+
+        return array_slice($data, 0, $limit, true);
     }
 }
