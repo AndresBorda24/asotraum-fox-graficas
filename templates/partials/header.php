@@ -10,9 +10,18 @@
 </header>
 <div class="bg-secondary text-light shadow sticky-top z-1">
   <div
-  class="container d-flex flex-column flex-md-row justify-content-between nav-scroller p-1">
-    <span class="fs-5"><?=  $title ?? "Cl&iacute;nica Asotrauma" ?></span>
-    <div class="align-items-center d-flex gap-1">
-    </div>
+    class="container d-flex flex-wrap gap-2 flex-column flex-md-row justify-content-between nav-scroller p-1 align-items-center"
+  >
+    <span class="fs-5">
+      <?=  $title ?? "Cl&iacute;nica Asotrauma" ?>
+    </span>
+
+    <?php
+      if (isset($extra)) {
+        echo $this->templateExists($extra)
+          ? $this->fetch($extra)
+          : $extra;
+      }
+    ?>
   </div>
 </div>

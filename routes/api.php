@@ -6,6 +6,7 @@ use App\Controllers\Api\AdmisionesController;
 use App\Controllers\Api\QXController;
 use Slim\Routing\RouteCollectorProxy;
 use App\Controllers\Api\VentasController;
+use App\Middleware\DatesHandlerMiddleware;
 use App\Middleware\StartEndDatesMiddleware;
 
 /**
@@ -14,13 +15,16 @@ use App\Middleware\StartEndDatesMiddleware;
 function loadApiRoutes(App $app): void {
     $app->group("/api", function(RouteCollectorProxy $api) {
         $api->group("/qx", function(RouteCollectorProxy $adm) {
-            $adm->get("/summary", [QXController::class, "summary"] );
+            $adm->get("/summary", [QXController::class, "summary"]);
+            $adm->get("/medicos", [QXController::class, "medicos"]);
+            $adm->get("/motivos-cancelacion", [QXController::class, "motivosCancelacion"]);
+            $adm->get("/ocupacion", [QXController::class, "ocupacion"]);
         });
 
         $api->group("/admisiones", function(RouteCollectorProxy $adm) {
             $adm->get("/summary", [AdmisionesController::class, "summary"] );
         });
-    });
+    })->add(DatesHandlerMiddleware::class);
 
     $app->group("/api/ventas", function(RouteCollectorProxy $group) {
         $group->get("/grilla", [

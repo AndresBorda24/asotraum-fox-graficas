@@ -52,7 +52,10 @@ body { font-family: 'Source Sans Pro', sans-serif; }
 .bg-blue-700{ background-color: #055a8c !important}
 .bg-blue-800{ background-color: #094c72 !important}
 .bg-blue-900{ background-color: #0c3953 !important}
-
+.border-dashed {
+    border-style: dashed !important;
+    border: 0;
+}
 .text-bg-primary {
     color: #fff!important;
     background-color: RGBA(var(--bs-primary-rgb),var(--bs-bg-opacity,1))!important;
