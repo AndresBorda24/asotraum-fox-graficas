@@ -46,7 +46,7 @@
       <header class="position-relative">
         <span class="fw-semibold fs-5">Ventas</span>
       </header>
-      <div class="d-flex flex-fill">
+      <a class="d-flex flex-fill text-decoration-none text-dark" href="#facturacion-general-container">
         <span
           style="font-size: 3.7rem"
           class="text-dark border border-dark p-2 rounded-bottom-pill bg-warning-subtle"
@@ -76,7 +76,7 @@
               Cargando información, por favor espera &#8230;
             </p>
           </template>
-      </div>
+      </a>
       <footer
         x-data="cambiarFechas"
         class="d-flex gap-2 pt-2 border-top align-items-center"

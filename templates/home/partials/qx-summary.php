@@ -26,21 +26,33 @@
     <div class="mx-auto bg-body border shadow-sm" id="qx-summary"></div>
   </div>
 
-  <a
-    target="_blank"
-    href="/estadisticas-qx"
-    class="home-graph-link btn btn-sm btn-outline-primary py-1 px-4 rounded-5 lh-1 border-0 position-absolute top-0 end-0 m-1 mt-2 text-decoration-none d-flex align-items-center gap-2"
-  >
-    <span class="fs-6 d-none d-sm-block">Ir a Grilla</span>
-    <span class="fs-4"> <?= $this->fetch("./icons/link.php") ?> </span>
-  </a>
+  <div class="position-absolute top-0 end-0 m-1 mt-2 d-flex gap-2">
+    <a
+      target="_blank"
+      href="/estadisticas-qx"
+      class="home-graph-link btn btn-sm btn-outline-primary py-1 rounded-5 lh-1 border-0 text-decoration-none d-flex align-items-center gap-1"
+    >
+      <span class="fs-6 d-none d-sm-block">Ir a Grilla</span>
+      <span class="fs-4"> <?= $this->fetch("./icons/link.php") ?> </span>
+    </a>
+
+    <a
+      target="_blank"
+      href="<?= $this->link("qx") ?>"
+      class="home-graph-link btn btn-sm btn-outline-primary py-1 rounded-5 lh-1 border-0 text-decoration-none d-flex align-items-center gap-1"
+    >
+      <span class="fs-6 d-none d-sm-block">Gráficas</span>
+      <span class="fs-4"> <?= $this->fetch("./icons/link.php") ?> </span>
+    </a>
+  </div>
+
 
   <template x-teleport="#general-summary">
     <div class="py-2 d-flex flex-column gap-2 px-3 rounded bg-light shadow">
       <header class="position-relative">
         <span class="fw-semibold fs-5">Cirugías</span>
       </header>
-      <div class="d-flex flex-fill">
+      <a class="d-flex flex-fill text-decoration-none text-dark" href="#qx-summary">
         <span
           style="font-size: 3.7rem"
           class="text-dark border border-primary p-2 rounded-bottom-pill bg-primary-subtle"
@@ -50,7 +62,7 @@
           <span x-text="total.neto" class="fw-bold"></span>, de las cuales
           <span x-text="total.cumplidas" class="fw-bold"></span> ya han sido cumplidas
         </p>
-      </div>
+      </a>
       <footer class="d-flex gap-2 pt-2 border-top align-items-center">
         <label for="from" class="small flex-fill">
           Desde

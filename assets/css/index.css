@@ -33,7 +33,9 @@
     --req-pendiente: #E8630A;
     --req-pendiente-rgb: 232,99,10;
 }
-
+html {
+  scroll-behavior: smooth;
+}
 .bg {
     background-color: #fff;
     background-image: radial-gradient(#025b7d 0.5px, transparent 0);
