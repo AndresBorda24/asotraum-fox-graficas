@@ -18,6 +18,7 @@ function loadApiRoutes(App $app): void {
             $adm->get("/summary", [QXController::class, "summary"]);
             $adm->get("/medicos", [QXController::class, "medicos"]);
             $adm->get("/motivos-cancelacion", [QXController::class, "motivosCancelacion"]);
+            $adm->get("/ocupacion", [QXController::class, "ocupacion"]);
         });
 
         $api->group("/admisiones", function(RouteCollectorProxy $adm) {

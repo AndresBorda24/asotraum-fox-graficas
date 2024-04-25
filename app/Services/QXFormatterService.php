@@ -93,4 +93,37 @@ class QXFormatterService
 
         return array_slice($data, 0, $limit, true);
     }
+
+    public function forOcupacion(\PDOStatement $result): array
+    {
+        $data = [];
+        $today = date("Y-m-d");
+        $tomorrow = date("Y-m-d", strtotime("tomorrow"));
+
+        while ($row = $result->fetch(\PDO::FETCH_ASSOC)) {
+            $qx = trimUtf8($row["quirofano"]);
+
+            $inicio = $row["inicio"];
+            $final  = (bool) trim($row["final"])
+                ? trim($row["final"])
+                : $row["estimada"];
+
+            $hora1 = strtotime("$today $final");
+            $hora2 = strtotime("$today $inicio");
+            $diff  = $hora1 - $hora2;
+
+            if($diff < 0) {
+                $hora1 = strtotime("$tomorrow $final");
+                $diff  = $hora1 - $hora2;
+            }
+
+            $data[$qx] ??= 0;
+            $data[$qx] += $diff;
+        }
+
+        foreach ($data as $key => $val) {
+            $data[$key] = ceil(($val / 36) / 24);
+        }
+        return $data;
+    }
 }

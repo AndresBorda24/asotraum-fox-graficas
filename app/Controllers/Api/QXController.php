@@ -33,31 +33,7 @@ class QXController
         ]);
     }
 
-    public function motivosCancelacion(
-        Response $response,
-        \DateTimeInterface $from,
-        \DateTimeInterface $to
-    ): Response {
-        return responseJson( $response, [
-            "data"  => $this->qx->motivosCancelacion($from, $to),
-            "dates" => [
-                "from" => $from->format("Y-m-d"),
-                "to" => $to->format("Y-m-d")
-            ]
-        ]);
-    }
-
-    public function medicos(
-        Response $response,
-        \DateTimeInterface $from,
-        \DateTimeInterface $to
-    ): Response {
-        return responseJson( $response, [
-            "data"  => $this->qx->medicos($from, $to),
-            "dates" => [
-                "from" => $from->format("Y-m-d"),
-                "to" => $to->format("Y-m-d")
-            ]
-        ]);
+    public function ocupacion( Response $response): Response {
+        return responseJson( $response, $this->qx->ocupacion());
     }
 }

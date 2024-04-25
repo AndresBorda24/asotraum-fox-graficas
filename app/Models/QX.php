@@ -92,4 +92,27 @@ class QX
 
         return $this->formatter->forMedicos($query);
     }
+
+    public function ocupacion(): array
+    {
+        $hoy = date("m.d.y");
+        $query = $this->db->query(sprintf(
+            "SELECT DISTINCT
+                CR.horai AS inicio,
+                PA.nombre AS quirofano,
+                CR.horfinest AS estimada,
+                CR.horfinreal AS final
+            FROM GEMA10.D/SALUD/DATOS/CIRUGPROG AS CR
+            LEFT JOIN GEMA10.D/IPT/DATOS/PUNTO_AT AS PA
+                ON PA.punto_at = CR.lugar
+            WHERE
+                CR.fecha = CTOD('$hoy')
+                AND CR.moti_canc = '  '"
+        ));
+
+        if ($query === false)
+            throw new \PDOException("Error en consulta: ". $this->db->errorCode());
+
+        return $this->formatter->forOcupacion($query);
+    }
 }
