@@ -88,7 +88,8 @@ export default () => ({
     updateChartSeries() {
         const _ = this.data.map(d => {
             const data = d.data.reduce((acc, _) => {
-                acc.labels.push(_.quien);
+                acc.labels.push( "("+_.facturas+")"+" "+_.quien );
+
                 acc.data.push(_.cuanto);
 
                 return acc;
@@ -104,8 +105,8 @@ export default () => ({
             },
             series: [{
                 name: "Total Facturado",
-                data: _[0].data
-            }]
+                data: _[0].data,
+            }],
         });;
     },
     /**
@@ -131,7 +132,7 @@ export default () => ({
                     const total = this.formatter.format(Math.round(
                         parseInt(val) / 1000000
                     ))
-                        + ' ' + 'M';
+                        + ' ' + 'M'+ ' ';
 
                     return total;
                 },

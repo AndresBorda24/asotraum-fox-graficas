@@ -157,7 +157,7 @@ class VentasController
                     SUM(V.vr_gravado) +
                     SUM(V.vr_exento)  +
                     SUM(V.iva_bienes)
-                ) - SUM(V.financ_vr) AS total
+                ) - SUM(V.financ_vr) AS total, count(*)  AS totalConteo
             FROM GEMA10.D/VENTAS/DATOS/VTFACC$year V
             LEFT JOIN GEMA10.D/DGEN/DATOS/MAOPERA2 M
                 ON V.quien = M.id

@@ -3,110 +3,88 @@ import ApexCharts from 'apexcharts';
 import { createLoader, removeLoader } from "../../partials/loader";
 
 export default () => ({
-    days: 3,
+    selectedDays: ['1', '2', '3'], // Asegúrate de que esté definido aquí
     data: {},
-    zoom: false,
     chart: undefined,
     chartWrapper: "admisiones-summary",
-    /**
-     * Aqui se guarda la informacion de la seccion al dar click
-    */
+    zoom : false,
+
     async init() {
-        /**
-         * Creamos la grafia `vacia`, sin datos (seires)
-        */
         this.createChart();
         this.chart.render();
         this.updateChart();
 
         this.$watch("zoom", (val) => {
-            // Activa / Desactiva el zoom en mobile
             this.chart.updateOptions({
                 responsive: [{
                     breakpoint: 768,
                     options: {
                         chart: {
-                            zoom: {
-                                enabled: val
-                            }
-                        },
-                    },
+                            zoom: { enabled: val }
+                        }
+                    }
                 }]
             });
         });
     },
-    /**
-     * Realiza la consulta a la API e iguala la variable `data` de la clase al
-     * resultado.
-    */
-    async getData() {
-        const endPoint = `${import.meta.env.VITE_API}/admisiones/summary?days=${this.days}`;
-        return axios
-            .get(`${endPoint}`)
-            .catch(error => console.error("Axios Handler: ", error));
-    },
-    /**
-     * Handler del evento de actualizacion de fechas
-    */
-    async updateChart() {
-        /**
-         * Consultamos la base de datos
-        */
-        createLoader(`#${this.chartWrapper}-container`);
-        const res = await this.getData();
-        removeLoader(`#${this.chartWrapper}-container`);
 
-        this.data = res.data;
-        this.updateChartSeries();
+    async updateChart() {
+        createLoader(`#${this.chartWrapper}-container`);
+        const tiposIngreso = this.selectedDays.join(","); // Convierte el array a una cadena
+        // Llama a tu API con los tipos seleccionados
+        const res = await axios.get(`${import.meta.env.VITE_API}/admisiones/clasepro-horas`, {
+            params: { selectedDays: tiposIngreso } // Envía los tipos de ingreso como parámetros
+        });
+        removeLoader(`#${this.chartWrapper}-container`);
+        this.data = res.data; // Asigna los datos obtenidos a this.data
+        this.updateChartSeries(); // Actualiza la gráfica
     },
-    /**
-     * Actualiza las series y las categorias del grafico
-    */
+
     updateChartSeries() {
-        const series = Object.keys(this.data.data).reverse().map(key => {
-            return {
-                "name": key,
-                data: Object.values(this.data.data[key])
+        const responseData = this.data;  // Asigna los datos recibidos del servidor
+        const series = {};
+
+        // Seleccionar una fecha de manera dinámica
+        const allDates = Object.keys(responseData.data); // Obtiene todas las fechas
+        const selectedDate = allDates[Math.floor(Math.random() * allDates.length)]; // Selecciona una fecha al azar
+
+        const categories = Object.keys(this.data.data[selectedDate]);
+
+        // Agrupar datos por fecha y hora
+        Object.keys(this.data).forEach(item => {
+            const { fecha, hora, clasepro, total } = item;
+
+            // Asegurarse de que la serie esté configurada para cada fecha
+            if (!series[fecha]) {
+                series[fecha] = { name: fecha, data: Array(24).fill(0) };
+            }
+            // Asigna el total a la hora correspondiente
+            series[fecha].data[parseInt(hora)] = total;
+
+            // Asegúrate de que las categorías estén en orden
+            if (!categories.includes(hora)) {
+                categories.push(hora);
             }
         });
 
-        const key = Object.keys(this.data.data)[0];
-        const categories = Object.keys(this.data.data[key])
+        // Convierte el objeto series a un array
+        const seriesArray = Object.keys(this.data.data).map((f) => {
+            return {
+                name: f,
+                data: Object.values(this.data.data[f])
+            }
+        })
+
 
         this.chart.updateOptions({
-            series,
-            xaxis: {
-                type: 'category',
-                categories
-            },
-            responsive: [{
-                breakpoint: 768,
-                options: {
-                    chart: {
-                        zoom: {
-                            enabled: false
-                        }
-                    },
-                    xaxis: {
-                        type: 'category',
-                        labels: {
-                            rotate: 90,
-                            offsetY: 40
-                        }
-                    }
-                },
-            }]
+            series: seriesArray,
+            xaxis: { categories: [...new Set(categories)] } // Asegúrate de que las categorías estén en orden
         });
     },
-    /**
-     * Crea la grafica pero `NO` la renderiza.
-    */
+
     createChart() {
         const options = {
-            chart: {
-                type: 'area',
-                height: 350
-            },
+            chart: { type: 'area', height: 350 },
             dataLabels: {
                 enabled: false
             },
@@ -121,11 +99,8 @@ export default () => ({
                 type: 'category',
                 categories: []
             },
-        }
+        };
 
-        this.chart = new ApexCharts(
-            document.getElementById(this.chartWrapper),
-            options
-        );
+        this.chart = new ApexCharts(document.getElementById(this.chartWrapper), options);
     }
-})
+});

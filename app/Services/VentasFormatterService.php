@@ -23,6 +23,7 @@ class VentasFormatterService
             $ctrl["meta"]["total"]["cash"]    += (int) $reg->total;
 
 
+
             if (count($ctrl["data"]) >= 10) {
                 if (!array_key_exists("otros", $ctrl["data"])) {
                     $ctrl["data"]["otros"] = [
@@ -126,10 +127,10 @@ class VentasFormatterService
             array_push($ctrl, [
                 "id"    => trimUtf8($reg->quien),
                 "quien" => trimUtf8($reg->nombre),
-                "cuanto" => (int) $reg->total
+                "cuanto" => (int) $reg->total,
+                "facturas" => (int) $reg->totalconteo
             ]);
         }
-
         $this->schema["data"] = $ctrl;
     }
 
