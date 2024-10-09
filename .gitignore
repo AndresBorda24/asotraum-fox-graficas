@@ -3,6 +3,6 @@ node_modules
 package-lock.json
 public/build
 .env
-.env.prod
+.env.production
 public/hot
 .vscode
